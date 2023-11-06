@@ -5,7 +5,7 @@ const fetch = (...args) =>
 
 const router = express.Router();
 
-router.post('api/users/register', async (req, res) => {
+router.post('/api/users/register', async (req, res) => {
     const {first_name, last_name, email, password} = req.body;
 
     const body = JSON.stringify({
@@ -18,11 +18,11 @@ router.post('api/users/register', async (req, res) => {
     try {
         const registerRes = await fetch(`${process.env.API_URL}/api/users/register`, {
             method: 'POST',
-            heaers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body,
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body,
         });
 
         const data = await registerRes.json();
@@ -31,9 +31,9 @@ router.post('api/users/register', async (req, res) => {
 
     } catch (err) {
         return res.status(500).json({
-            error: "Something went wrong when registering account"
-        })
+            error: "Something went wrong when registering account",
+        });
         
     }
-})
+});
 module.exports = router
