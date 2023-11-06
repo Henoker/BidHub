@@ -8,8 +8,10 @@ const Layout = ({ title, content, children }) => (
 			<title>{title}</title>
 			<meta name='description' content={content} />
 		</Helmet>
+		<div>
 		<Navbar/>
-		<div className='container mt-5'>{children}</div>
+		</div>
+		<div className='bg-gray-800'>{children}</div>
 	</>
 );
 
