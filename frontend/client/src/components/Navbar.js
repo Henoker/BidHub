@@ -1,8 +1,10 @@
 import React from 'react'
 import { Link, NavLink} from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../features/user';
 
 const Navbar = () => {
+	const dispatch = useDispatch();
 	const {isAuthenticated} = useSelector(state => state.user)
 
 	const authLinks = (
@@ -11,7 +13,12 @@ const Navbar = () => {
                 <NavLink rel="noopener noreferrer" to='/dashboard' className="flex items-center px-4 -mb-1 border-b-2 border-transparent">Dashboard</NavLink>
 				</li>
 				<li className="flex">
-                <NavLink rel="noopener noreferrer" to='/dashboard' className="flex items-center px-4 -mb-1 border-b-2 border-transparent">Logout</NavLink>
+                <NavLink 
+				rel="noopener noreferrer" 
+				to='#!' 
+				onClick={() => dispatch(logout())}
+				className="flex items-center px-4 -mb-1 border-b-2 border-transparent"
+				>Logout</NavLink>
 			</li>
 		</>
 	);
