@@ -2,11 +2,11 @@ import React, {useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { resetRegistered, login, isAuthenticated } from '../features/user'; 
 import Layout from '../components/Layout';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link } from 'react-router-dom';
 
 const LoginPage = () => {
   const dispatch = useDispatch();
-	const { loading, isAuthenticated, registered } = useSelector(
+	const { loading } = useSelector(
 		state => state.user
 	);
 
@@ -16,8 +16,8 @@ const LoginPage = () => {
 	});
 
 	useEffect(() => {
-		if (registered) dispatch(resetRegistered());
-	}, [registered]);
+		dispatch(resetRegistered());
+	}, []);
 
 	const { email, password } = formData;
 
@@ -28,7 +28,7 @@ const LoginPage = () => {
 	const onSubmit = e => {
 		e.preventDefault();
 
-		dispatch(login({ email, password }));
+		// dispatch(login({ email, password }));
 	};
   
   if (isAuthenticated) return <Navigate to='/dashboard' />;
@@ -83,7 +83,6 @@ const LoginPage = () => {
                 <input
                   type="email"
                   name="email"
-                  id="email"
                   placeholder="example@example.com"
                   onChange={onChange}
                   value={email}
@@ -99,12 +98,12 @@ const LoginPage = () => {
                   >
                     Password
                   </label>
-                  <a
-                    href="#"
+                  <Link
+                    to="/register"
                     className="text-sm text-gray-400 focus:text-blue-500 hover:text-blue-500 hover:underline"
                   >
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
                 <input
                   type="password"
@@ -134,7 +133,7 @@ const LoginPage = () => {
             <p className="mt-6 text-sm text-center text-gray-400">
               Don't have an account yet?{" "}
               <a
-                href="#"
+                href="#!"
                 className="text-blue-500 focus:outline-none focus:underline hover:underline"
               >
                 Sign up
