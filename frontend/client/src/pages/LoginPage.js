@@ -1,6 +1,6 @@
 import React, {useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { resetRegistered, login, isAuthenticated } from '../features/user'; 
+import { resetRegistered , login } from '../features/user'; 
 import Layout from '../components/Layout';
 import { Navigate, Link } from 'react-router-dom';
 
@@ -28,10 +28,10 @@ const LoginPage = () => {
 	const onSubmit = e => {
 		e.preventDefault();
 
-		// dispatch(login({ email, password }));
+		dispatch(login({ email, password }));
 	};
   
-  if (isAuthenticated) return <Navigate to='/dashboard' />;
+  // if (isAuthenticated) return <Navigate to='/dashboard' />;
   
   return (
     <Layout title='Auth Site | Login' content='Login page'>
@@ -132,12 +132,12 @@ const LoginPage = () => {
             </form>
             <p className="mt-6 text-sm text-center text-gray-400">
               Don't have an account yet?{" "}
-              <a
-                href="#!"
+              <Link
+                to="/register"
                 className="text-blue-500 focus:outline-none focus:underline hover:underline"
               >
                 Sign up
-              </a>
+              </Link>
               .
             </p>
           </div>
