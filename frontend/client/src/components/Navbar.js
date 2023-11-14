@@ -1,48 +1,9 @@
 import React from 'react'
 import { Link, NavLink} from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../features/user';
+
 
 const Navbar = () => {
-	const dispatch = useDispatch();
-	const {isAuthenticated} = useSelector(state => state.user)
-
-	const authLinks = (
-		<>
-			<li className="flex">
-                <NavLink rel="noopener noreferrer" to='/dashboard' className="flex items-center px-4 -mb-1 border-b-2 border-transparent">Dashboard</NavLink>
-				</li>
-				<li className="flex">
-                <NavLink 
-				rel="noopener noreferrer" 
-				to='#!' 
-				onClick={() => dispatch(logout())}
-				className="flex items-center px-4 -mb-1 border-b-2 border-transparent"
-				>Logout</NavLink>
-			</li>
-		</>
-	);
-
-	const guestLinks = (
-		<>
-		<ul className="items-stretch hidden space-x-3 lg:flex">
-				<li className="flex">
-					<NavLink rel="noopener noreferrer" to='/' className="flex items-center px-4 -mb-1 border-b-2 border-transparent  text-violet-400 border-violet-400">Home</NavLink>
-				</li>
-				
-		</ul>
-		<div className="items-center space-x-8 flex-shrink-0 hidden lg:flex">
-			<Link to='/login'>
-            <button className="px-8 py-3 font-semibold rounded bg-violet-400 text-gray-900">Login</button>
-            </Link>
-            <Link to='/register'>
-            <button className="px-8 py-3 font-semibold rounded bg-violet-400 text-gray-900">Register</button>
-            </Link>
-           
-		</div>
-
-		</>
-	)
+	
   return (
     <header className="p-4 bg-gray-800 text-gray-100">
 	<div className="container flex justify-between h-16 mx-auto">
@@ -61,7 +22,7 @@ const Navbar = () => {
 				<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
 			</svg>
 		</button>
-		{isAuthenticated ? authLinks : guestLinks}
+		
 	</div>
 </header>
   )
