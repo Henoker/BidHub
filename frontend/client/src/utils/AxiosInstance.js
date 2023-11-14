@@ -1,5 +1,5 @@
 import axios from "axios"
-import * as jwt_decode from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
 import dayjs from "dayjs";
 
 
@@ -19,7 +19,7 @@ const AxiosInstance = axios.create({
     if (accessToken) {
         //  accessToken=localStorage.getItem('token') ? JSON.parse(localStorage.getItem('token')) : null
          req.headers.Authorization = localStorage.getItem('token') ? `Bearer ${accessToken}` : ""
-         const user = jwt_decode(accessToken)
+         const user = jwtDecode(accessToken)
         const isExpired=dayjs.unix(user.exp).diff(dayjs()) < 1
         if(!isExpired) return req
         const resp =await axios.post(`${baseURL}auth/token/refresh/`, {

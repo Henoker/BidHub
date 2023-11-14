@@ -1,78 +1,66 @@
-import React from 'react'
 import Layout from './Layout'
+import React, {useEffect} from 'react'
+import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from 'react-hot-toast';
+import AxiosInstance from "../utils/AxiosInstance";
+
+
 
 const DashboardPage = () => {
+	const jwt=localStorage.getItem('token')
+	const user = JSON.parse(localStorage.getItem('user'))
+    const navigate = useNavigate();
+
+	useEffect(() => {
+		if (jwt === null && !user) {
+			navigate('/login')
+		}else{
+		 getSomeData()
+		}
+		
+	  }, [jwt, user])
+	  
+	 const getSomeData =async ()=>{
+		 const res =await AxiosInstance.get('auth/get-something/')
+		 console.log(res.data)
+	 }
+	 const refresh=JSON.parse(localStorage.getItem('refresh_token'))
+
+	 const handleLogout = async ()=>{
+		const res = await AxiosInstance.post('auth/logout/', {'refresh_token':refresh})
+		if (res.status === 204) {
+			 localStorage.removeItem('token')
+			 localStorage.removeItem('refresh_token')
+			 localStorage.removeItem('user')
+			 navigate('/login')
+			 toast.success('Logout successful');
+		}
+	  }
   return (
     <Layout title='Auth Site | Dashboard' content='Dashboard page'>
-			<section className="py-6 sm:py-12 bg-gray-800 text-gray-100">
-	<div className="container p-6 mx-auto space-y-8">
-		<div className="space-y-2 text-center">
-			<h2 className="text-3xl font-bold">Partem reprimique an pro</h2>
-			<p className="font-serif text-sm text-gray-400">Qualisque erroribus usu at, duo te agam soluta mucius.</p>
-		</div>
-		<div className="grid grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 lg:grid-cols-4">
-			<article className="flex flex-col  bg-gray-900">
-				{/* <a rel="noopener noreferrer" href="#" aria-label="Te nulla oportere reprimique his dolorum"> */}
-					<img alt="" className="object-cover w-full h-52  bg-gray-500" src="https://source.unsplash.com/200x200/?fashion?1" />
-				{/* </a> */}
-				<div className="flex flex-col flex-1 p-6">
-					{/* <a rel="noopener noreferrer" href="#" aria-label="Te nulla oportere reprimique his dolorum"></a>
-					<a rel="noopener noreferrer" href="#" className="text-xs tracki uppercase hover:underline dark:text-violet-400">Convenire</a> */}
-					<h3 className="flex-1 py-2 text-lg font-semibold leadi">Te nulla oportere reprimique his dolorum</h3>
-					<div className="flex flex-wrap justify-between pt-3 space-x-2 text-xs text-gray-400">
-						<span>June 1, 2020</span>
-						<span>2.1K views</span>
-					</div>
-				</div>
-			</article>
-			<article className="flex flex-col bg-gray-900">
-      <img alt="" className="object-cover w-full h-52 bg-gray-500" src="https://source.unsplash.com/200x200/?fashion?2" />
-				{/* <a rel="noopener noreferrer" href="#" aria-label="Te nulla oportere reprimique his dolorum">
-					
-				</a> */}
-				<div className="flex flex-col flex-1 p-6">
-					{/* <a rel="noopener noreferrer" href="#" aria-label="Te nulla oportere reprimique his dolorum"></a>
-					<a rel="noopener noreferrer" href="#" className="text-xs tracki uppercase hover:underline dark:text-violet-400">Convenire</a> */}
-					<h3 className="flex-1 py-2 text-lg font-semibold leadi">Te nulla oportere reprimique his dolorum</h3>
-					<div className="flex flex-wrap justify-between pt-3 space-x-2 text-xs  ext-gray-400">
-						<span>June 2, 2020</span>
-						<span>2.2K views</span>
-					</div>
-				</div>
-			</article>
-			<article className="flex flex-col bg-gray-900">
-      <img alt="" className="object-cover w-full h-52 bg-gray-500" src="https://source.unsplash.com/200x200/?fashion?3" />
-				{/* <a rel="noopener noreferrer" href="#" aria-label="Te nulla oportere reprimique his dolorum">
-					
-				</a> */}
-				<div className="flex flex-col flex-1 p-6">
-					{/* <a rel="noopener noreferrer" href="#" aria-label="Te nulla oportere reprimique his dolorum"></a>
-					<a rel="noopener noreferrer" href="#" className="text-xs tracki uppercase hover:underline dark:text-violet-400">Convenire</a> */}
-					<h3 className="flex-1 py-2 text-lg font-semibold leadi">Te nulla oportere reprimique his dolorum</h3>
-					<div className="flex flex-wrap justify-between pt-3 space-x-2 text-xs text-gray-400">
-						<span>June 3, 2020</span>
-						<span>2.3K views</span>
-					</div>
-				</div>
-			</article>
-			<article className="flex flex-col bg-gray-900">
-      <img alt="" className="object-cover w-full h-52 bg-gray-500" src="https://source.unsplash.com/200x200/?fashion?4" />
-				{/* <a rel="noopener noreferrer" href="#" aria-label="Te nulla oportere reprimique his dolorum">
-					
-				</a> */}
-				<div className="flex flex-col flex-1 p-6">
-					{/* <a rel="noopener noreferrer" href="#" aria-label="Te nulla oportere reprimique his dolorum"></a>
-					<a rel="noopener noreferrer" href="#" className="text-xs tracki uppercase hover:underline dark:text-violet-400">Convenire</a> */}
-					<h3 className="flex-1 py-2 text-lg font-semibold leadi">Te nulla oportere reprimique his dolorum</h3>
-					<div className="flex flex-wrap justify-between pt-3 space-x-2 text-xs text-gray-400">
-						<span>June 4, 2020</span>
-						<span>2.4K views</span>
-					</div>
-				</div>
-			</article>
-		</div>
-	</div>
-</section>
+		<section className="bg-gray-900">
+    <div className="container flex flex-col items-center px-4 py-12 mx-auto text-center">
+      <h2 className="max-w-2xl mx-auto text-2xl font-semibold tracking-tight xl:text-3xl text-white">
+	  welcome to your profile{" "}
+        <span className="text-blue-500">{user && user.full_name}.</span>
+      </h2>
+      <p className="max-w-4xl mt-6 text-center text-gray-300">
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum quidem
+        officiis reprehenderit, aperiam veritatis non, quod veniam fuga possimus
+        hic explicabo laboriosam nam. A tempore totam ipsa nemo adipisci iusto!
+      </p>
+      <div className="inline-flex w-full mt-6 sm:w-auto">
+        <button
+          onClick={handleLogout}
+          className="inline-flex items-center justify-center w-full px-6 py-2 text-white duration-300 bg-blue-600 rounded-lg hover:bg-blue-500 focus:ring focus:ring-blue-300 focus:ring-opacity-80"
+        >
+          logout
+        </button>
+      </div>
+    </div>
+  </section>
+			
+  <Toaster position="top-right" reverseOrder={false} />
 	</Layout>
   )
 }

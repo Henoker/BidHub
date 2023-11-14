@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Layout from './Layout';
 import { useNavigate } from 'react-router-dom';
 import axios from "axios"
-import { toast } from "react-toastify";
+import toast, { Toaster } from 'react-hot-toast';
 
 const RegisterPage = () => {
 	const navigate= useNavigate()
@@ -155,6 +155,7 @@ const RegisterPage = () => {
       		
    		    </div>
   </section>
+  <Toaster position="top-right" reverseOrder={false} />
 	</Layout>
   )
 }

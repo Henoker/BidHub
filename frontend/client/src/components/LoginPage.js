@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify';
+import toast, { Toaster } from 'react-hot-toast';
 import AxiosInstance from "../utils/AxiosInstance";
 
 const LoginPage = () => {
@@ -140,6 +140,7 @@ const LoginPage = () => {
         </div>
       </div>
     </div>
+    <Toaster position="top-right" reverseOrder={false} />
   </div>
   )
 }

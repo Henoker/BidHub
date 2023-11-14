@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, {useState} from 'react'
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import toast, { Toaster } from 'react-hot-toast';
 
 const VerifyEmail = () => {
     const [otp, setOtp]=useState("")
@@ -62,6 +62,7 @@ const VerifyEmail = () => {
         </button>
       </form>
     </div>
+    <Toaster position="top-right" reverseOrder={false} />
   </section>
   )
 }
