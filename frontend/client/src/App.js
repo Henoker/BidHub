@@ -5,6 +5,8 @@ import RegisterPage from './components/RegisterPage';
 import VerifyEmail from './components/VerifyEmail';
 import LoginPage from './components/LoginPage';
 import DashboardPage from './components/DashboardPage';
+import PasswordResetRequest from './components/PasswordResetRequest';
+import ResetPassword from './components/ResetPassword';
 
 const App = () => {
 
@@ -16,6 +18,8 @@ const App = () => {
                 <Route path='/otp/verify' element={<VerifyEmail/>} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/dashboard' element={<DashboardPage/>}/>
+                <Route path='/forget-password' element={<PasswordResetRequest/>}/>
+                <Route path='/password-reset-confirm/:uid/:token' element={<ResetPassword/>}/>
               </Routes>
           </Router>
    
