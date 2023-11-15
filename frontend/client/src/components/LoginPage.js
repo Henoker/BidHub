@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
 import AxiosInstance from "../utils/AxiosInstance";
+import Layout from './Layout';
 
 const LoginPage = () => {
   const navigate=useNavigate()
@@ -40,6 +41,7 @@ const LoginPage = () => {
     }
   
   return (
+    <Layout title='Auth Site | Register' content='Registration page'>
     
       <div className="bg-gray-900">
     <div className="flex justify-center h-screen">
@@ -142,6 +144,7 @@ const LoginPage = () => {
     </div>
     <Toaster position="top-right" reverseOrder={false} />
   </div>
+  </Layout>
   )
 }
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import Layout from './Layout';
+import { Link } from 'react-router-dom';
 
 const HomePage = () => {
     return (
@@ -9,7 +10,7 @@ const HomePage = () => {
     <div className="w-full lg:w-1/2">
       <div className="lg:max-w-lg">
         <h1 className="text-3xl font-semibold tracking-wide text-white lg:text-4xl">
-          Easiest way to create your website
+          Easiest way to bid
         </h1>
         <div className="mt-8 space-y-5">
           <p className="flex items-center -mx-2 text-gray-200">
@@ -65,8 +66,8 @@ const HomePage = () => {
           </p>
         </div>
       </div>
-      <div className="w-full mt-8 bg-transparent border rounded-md lg:max-w-sm border-gray-700  focus-within:ring focus-within:ring-blue-300 focus-within:border-blue-400 focus-within:ring-opacity-40">
-        <form className="flex flex-col lg:flex-row">
+      <div className="w-full space-x-4 mt-8 bg-transparent rounded-md lg:max-w-sm">
+        {/* <form className="flex flex-col lg:flex-row">
           <input
             type="email"
             placeholder="Enter your email address"
@@ -78,13 +79,16 @@ const HomePage = () => {
           >
             Join Us
           </button>
-        </form>
+        </form> */}
+       
+			<Link to="/login" className="px-8 py-3 font-semibold rounded bg-indigo-400 text-gray-900">Login</Link>
+			<Link to="/register" className="px-8 py-3 font-semibold rounded bg-indigo-400 text-gray-900">Register</Link>
       </div>
     </div>
     <div className="flex items-center justify-center w-full h-96 lg:w-1/2">
       <img
         className="object-cover w-full h-full mx-auto rounded-md lg:max-w-2xl"
-        src="https://images.unsplash.com/photo-1543269664-7eef42226a21?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
+        src="https://images.unsplash.com/photo-1592503254549-d83d24a4dfab?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         alt="glasses photo"
       />
     </div>

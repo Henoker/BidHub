@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Layout from './Layout';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios"
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -40,7 +40,7 @@ const RegisterPage = () => {
   return (
     <Layout title='Auth Site | Register' content='Registration page'>
 		<section className="bg-gray-900">
-			<div className="flex justify-center min-h-screen">
+			<div className="flex justify-normal min-h-screen">
 				<div
 				className="hidden bg-cover lg:block lg:w-2/5"
 				style={{
@@ -49,109 +49,86 @@ const RegisterPage = () => {
        		    }}
       		    >
 			    </div>
-				<div className="flex items-center w-full max-w-3xl p-8 mx-auto lg:px-12 lg:w-3/5">
-					<div className="w-full">
-					<h1 className="text-2xl font-semibold tracking-wider capitalize text-white">
-						Register.
-          			</h1>
-					<p className="mt-4 text-gray-400">
-						Let&nbsp;s get you all set up so you can verify your personal account and
-           				begin setting up your profile.
-          			</p>
-					
-          			<form onSubmit={onSubmit} className="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2">
-            			<div>
-              				<label htmlFor='first_name' className="block mb-2 text-sm text-gray-600 dark:text-gray-200">
-                				First Name
-              				</label>
-              				<input
-                			type="text"
-                			placeholder="John"
-							name='first_name'
-                			className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
-							onChange={onChange}
-							value={first_name}
-							required
-							/>
-            			</div>
-            			<div>
-              				<label htmlFor='last_name' className="block mb-2 text-sm text-gray-600 dark:text-gray-200">
-                				Last name
-              				</label>
-              				<input
-                			type="text"
-                			placeholder="Snow"
-							name='last_name'
-                			className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
-							onChange={onChange}
-							value={last_name}
-							required
-              				/>
-            			</div>
-           				<div>
-              				<label htmlFor='email' className="block mb-2 text-sm text-gray-600 dark:text-gray-200">
-                				Email address
-              				</label>
-              				<input
-                			type="email"
-                			placeholder="johnsnow@example.com"
-							name='email'
-                			className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
-							onChange={onChange}
-							value={email}
-							required
-							/>
-            			</div>
-            			<div>
-              				<label htmlFor='password' className="block mb-2 text-sm text-gray-600 dark:text-gray-200">
-                				Password
-              				</label>
-              				<input
-                			type="password"
-                			placeholder="Enter your password"
-							name='password'
-                			className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
-							onChange={onChange}
-							value={password}
-							required
-							/>
-            			</div>
-						<div>
-              				<label htmlFor='password' className="block mb-2 text-sm text-gray-600 dark:text-gray-200">
-                				Confirm Password
-              				</label>
-              				<input
-                			type="password"
-                			placeholder="Confirm your password"
-							name='password2'
-                			className="block w-full px-5 py-3 mt-2 text-gray-700 placeholder-gray-400 bg-white border border-gray-200 rounded-lg dark:placeholder-gray-600 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
-							onChange={onChange}
-							value={password2}
-							required
-							/>
-            			</div>
-						<div>
-						<button className="flex items-center justify-between w-full px-6 py-3 text-sm tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
-							<span>Register </span>
-              				<svg
-                			xmlns="http://www.w3.org/2000/svg"
-                			className="w-5 h-5 rtl:-scale-x-100"
-                			viewBox="0 0 20 20"
-                			fill="currentColor"
-              				>
-                			<path
-                  			fillRule="evenodd"
-                  			d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                  			clipRule="evenodd"
-                			/>
-              				</svg>
-           				</button>           
-						</div>
-									
-						
-          			</form>
-        		</div>
-     		</div>
+				
+				<div className="w-full max-w-md p-4 rounded-md shadow sm:p-8 bg-gray-900 text-gray-100">
+	<h2 className="mb-3 text-3xl font-semibold text-center">Register to Bid</h2>
+	<p className="text-sm text-center text-gray-400">Already Registered?
+		<Link to="/login" rel="noopener noreferrer" className="focus:underline hover:underline">Sign in here</Link>
+	</p>
+	
+	
+	<form novalidate="" action="" onSubmit={onSubmit} className="space-y-8">
+		<div className="space-y-4">
+			<div className="space-y-2">
+				<label for="email" className="block text-sm">Email address</label>
+				<input 
+				type="email" 
+				name="email" 
+				value={email} 
+				placeholder="leroy@jenkins.com"
+				onChange={onChange} 
+				required
+				className="w-full px-3 py-2 border rounded-md border-gray-700 bg-gray-900 text-gray-100 dark:border-indigo-400" 
+				/>
+			</div>
+			<div className="space-y-2">
+				<label for="first_name" className="block text-sm">Fisrt Name</label>
+				<input 
+				type="text" 
+				name="first_name" 
+				value={first_name} 
+				placeholder="Jhon"
+				onChange={onChange}
+				required
+				className="w-full px-3 py-2 border rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:border-indigo-400" 
+				/>
+			</div>
+			<div className="space-y-2">
+				<label for="last_name" className="block text-sm">Last Name</label>
+				<input 
+				type="text" 
+				name="last_name" 
+				value={last_name} 
+				placeholder="Snow" 
+				className="w-full px-3 py-2 border rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:border-indigo-400" 
+				/>
+			</div>
+			<div className="space-y-2">
+				<div className="flex justify-between">
+					<label for="password" className="text-sm">Password</label>
+				</div>
+				<input 
+				type="password" 
+				name="password" 
+				value={password} 
+				placeholder="*****"
+				onChange={onChange}
+				required 
+				className="w-full px-3 py-2 border rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:border-indigo-400" 
+				/>
+			</div>
+			<div className="space-y-2">
+				<div className="flex justify-between">
+					<label for="password2" className="text-sm">Confirm Password</label>
+				</div>
+				<input 
+				type="password" 
+				name="password2" 
+				value={password2} 
+				placeholder="*****"
+				onChange={onChange}
+				required 
+				className="w-full px-3 py-2 border rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:border-indigo-400" 
+				/>
+			</div>
+		</div>
+		<button 
+		type="button" 
+		className="w-full px-8 py-3 font-semibold rounded-md bg-indigo-400 text-gray-900">
+			Submit
+		</button>
+	</form>
+</div>
       		
    		    </div>
   </section>
