@@ -12,29 +12,33 @@ const DashboardPage = () => {
     const navigate = useNavigate();
 
 	useEffect(() => {
-		if (jwt === null && !user) {
-			navigate('/login')
-		}else{
-		 getSomeData()
-		}
-		
-	  }, [jwt, user])
+		 getSomeData()	
+	  }, [])
 	  
 	 const getSomeData =async ()=>{
-		 const res =await AxiosInstance.get('auth/get-something/')
-		 console.log(res.data)
+		try {
+			const res =await AxiosInstance.get('auth/get-something/')
+		 	console.log(res.data)
+			
+		} catch (error) {
+			console.error('Error fetching data:', error);
+		}
+		 
 	 }
-	 const refresh=JSON.parse(localStorage.getItem('refresh_token'))
+	 
 
 	 const handleLogout = async ()=>{
-		const res = await AxiosInstance.post('auth/logout/', {'refresh_token':refresh})
-		if (res.status === 204) {
-			 localStorage.removeItem('token')
-			 localStorage.removeItem('refresh_token')
-			 localStorage.removeItem('user')
-			 navigate('/login')
-			 toast.success('Logout successful');
+		try {
+			const res = await AxiosInstance.post('auth/logout/');
+			if (res.status === 204) {
+				navigate('/login');
+				toast.success('Logout successful');
+			  }
+		} catch (error) {
+			console.error('Error logging out:', error);
+			
 		}
+		
 	  }
   return (
     <Layout title='Auth Site | Dashboard' content='Dashboard page'>

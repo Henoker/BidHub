@@ -56,7 +56,12 @@ class LoginUserView(GenericAPIView):
     def post(self, request):
         serializer= self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        response_data = {
+            'email': serializer.validated_data['email'],
+            'full_name': serializer.validated_data['full_name'],
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
 
 
 class PasswordResetRequestView(GenericAPIView):

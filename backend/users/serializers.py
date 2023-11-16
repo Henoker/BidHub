@@ -1,8 +1,5 @@
-import json
-from dataclasses import field
 from .models import UserAccount
 from rest_framework import serializers
-from string import ascii_lowercase, ascii_uppercase
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -12,6 +9,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from .utils import send_normal_email
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
+from django.http import HttpResponse
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -41,32 +39,35 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=155, min_length=6)
-    password=serializers.CharField(max_length=68, write_only=True)
-    full_name=serializers.CharField(max_length=255, read_only=True)
-    access_token=serializers.CharField(max_length=255, read_only=True)
-    refresh_token=serializers.CharField(max_length=255, read_only=True)
-
+    password = serializers.CharField(max_length=68, write_only=True)
+    full_name = serializers.CharField(max_length=255, read_only=True)
+    
     class Meta:
         model = UserAccount
-        fields = ['email', 'password', 'full_name', 'access_token', 'refresh_token']
-
-    
+        fields = ['email', 'password', 'full_name']
 
     def validate(self, attrs):
         email = attrs.get('email')
         password = attrs.get('password')
-        request=self.context.get('request')
+        request = self.context.get('request')
         user = authenticate(request, email=email, password=password)
+
         if not user:
-            raise AuthenticationFailed("invalid credential try again")
+            raise AuthenticationFailed("Invalid credentials, please try again")
+
         if not user.is_verified:
             raise AuthenticationFailed("Email is not verified")
-        tokens=user.tokens()
+
+        tokens = user.tokens()
+
+        # Create HttpOnly refresh token cookie
+        refresh_token = str(tokens.get('refresh'))
+        response = HttpResponse()
+        response.set_cookie(key='refresh_token', value=refresh_token, httponly=True)
+
         return {
-            'email':user.email,
-            'full_name':user.get_full_name,
-            "access_token":str(tokens.get('access')),
-            "refresh_token":str(tokens.get('refresh'))
+            'email': user.email,
+            'full_name': user.get_full_name,
         }
 
 

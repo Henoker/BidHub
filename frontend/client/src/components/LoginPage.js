@@ -18,30 +18,46 @@ const LoginPage = () => {
 
     const handleSubmit = async (e)=>{
             e.preventDefault()
-            if (logindata) {
-                 const res = await AxiosInstance.post('auth/login/', logindata)
-                 const response= res.data
-                 const user={
-                    'full_name':response.full_name,
-                    'email':response.email
-                 }
+            // if (logindata) {
+            //      const res = await AxiosInstance.post('auth/login/', logindata)
+            //      const response= res.data
+            //      const user={
+            //         'full_name':response.full_name,
+            //         'email':response.email
+            //      }
                    
 
-                 if (res.status === 200) {
-                     localStorage.setItem('token', JSON.stringify(response.access_token))
-                     localStorage.setItem('refresh_token', JSON.stringify(response.refresh_token))
-                     localStorage.setItem('user', JSON.stringify(user))
-                      navigate('/dashboard')
-                     toast.success('login successful')
-                 }else{
-                    toast.error('something went wrong')
-                 }
+            //      if (res.status === 200) {
+            //          localStorage.setItem('token', JSON.stringify(response.access_token))
+            //          localStorage.setItem('refresh_token', JSON.stringify(response.refresh_token))
+            //          localStorage.setItem('user', JSON.stringify(user))
+            //           navigate('/dashboard')
+            //          toast.success('login successful')
+            //      }else{
+            //         toast.error('something went wrong')
+            //      }
+            // }
+            try {
+              const res = await AxiosInstance.post('auth/login/', logindata);
+              const response = res.data;
+              if (res.status === 200) {
+                // The tokens are now handled through HttpOnly cookies
+                // No need to store them in localStorage
+                navigate('/dashboard');
+                toast.success('Login successful');
+              } else {
+                toast.error('Something went wrong');
+              }
+            } catch (error) {
+              console.error(error);
+              toast.error('An error occurred');
+              
             }
            
     }
   
   return (
-    <Layout title='Auth Site | Register' content='Registration page'>
+    <Layout title='Auth Site | Login' content='Login page'>
     
       <div className="bg-gray-900">
     <div className="flex justify-center h-screen">

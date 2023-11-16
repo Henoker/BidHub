@@ -57,6 +57,11 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
 ]
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+SESSION_COOKIE_SECURE = True  # Set to True if using HTTPS
+CSRF_COOKIE_SECURE = True  # Set to True if using HTTPS
+SESSION_COOKIE_SAMESITE = 'Lax'  # or 'Strict'
+CSRF_COOKIE_SAMESITE = 'Lax'
 ROOT_URLCONF = "commerce.urls"
 
 TEMPLATES = [
@@ -146,7 +151,7 @@ REST_FRAMEWORK={
 
 }
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
 }

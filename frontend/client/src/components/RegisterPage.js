@@ -90,6 +90,8 @@ const RegisterPage = () => {
 				name="last_name" 
 				value={last_name} 
 				placeholder="Snow" 
+				onChange={onChange}
+				required
 				className="w-full px-3 py-2 border rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:border-indigo-400" 
 				/>
 			</div>
@@ -122,17 +124,18 @@ const RegisterPage = () => {
 				/>
 			</div>
 		</div>
-		<button 
-		type="button" 
-		className="w-full px-8 py-3 font-semibold rounded-md bg-indigo-400 text-gray-900">
-			Submit
-		</button>
+		<input
+		type="submit" 
+		className="w-full px-8 py-3 font-semibold rounded-md bg-indigo-400 text-gray-900"
+		Value="Submit"
+		/>
 	</form>
 </div>
       		
    		    </div>
+<Toaster position="top-right" reverseOrder={false} />
   </section>
-  <Toaster position="top-right" reverseOrder={false} />
+  
 	</Layout>
   )
 }
