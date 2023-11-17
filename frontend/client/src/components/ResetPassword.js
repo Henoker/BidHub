@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import { useParams, useNavigate } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
-import AxiosInstance from '../utils/AxiosInstance';
+import AxiosInstance from '../axios/AxiosInstance';
 
 const ResetPassword = () => {
   const navigate=useNavigate()

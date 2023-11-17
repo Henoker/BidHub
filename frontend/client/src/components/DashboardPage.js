@@ -2,7 +2,7 @@ import Layout from './Layout'
 import React, {useEffect, useState} from 'react'
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
-import AxiosInstance from "../utils/AxiosInstance";
+import AxiosInstance from "../axios/AxiosInstance";
 
 
 

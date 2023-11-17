@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
-import AxiosInstance from "../utils/AxiosInstance";
+import AxiosInstance from "../axios/AxiosInstance";
 import Layout from './Layout';
 
 const LoginPage = () => {
