@@ -1,54 +1,60 @@
+from enum import unique
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.utils.translation import gettext_lazy as _
-from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
-from users.managers import UserManager
-# Create your models here.
+class AccountManager(BaseUserManager):
+    def create_user(self, email, username, password=None, **kwargs):
+        
+        if not email:
+            raise ValueError("Email is required")
 
-AUTH_PROVIDERS ={'email':'email', 'google':'google', 'github':'github', 'linkedin':'linkedin'}
+        if not username:
+            raise ValueError("Username is required")
 
-class UserAccount(AbstractBaseUser, PermissionsMixin):
-    id = models.BigAutoField(primary_key=True, editable=False) 
-    email = models.EmailField(
-        max_length=255, verbose_name=_("Email Address"), unique=True
-    )
-    first_name = models.CharField(max_length=100, verbose_name=_("First Name"))
-    last_name = models.CharField(max_length=100, verbose_name=_("Last Name"))
+        user = self.model(
+            email=self.normalize_email(email),
+            username = username,
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+
+        return user
+
+    def create_superuser(self, email, username, password, **kwargs):
+        user = self.create_user(
+            email=self.normalize_email(email),
+            username = username,
+            password = password
+        )
+
+        user.is_admin = True
+        user.is_staff = True
+        user.is_superuser= True
+        user.save(using=self._db)
+        return 
+
+
+class Account(AbstractBaseUser):
+    email = models.EmailField(null=False, blank=False, unique=True)
+    username = models.CharField(max_length=50, blank=False, null=False)
+    is_admin = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    is_verified=models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    date_joined = models.DateTimeField(auto_now_add=True)
-    last_login = models.DateTimeField(auto_now=True)
-    auth_provider=models.CharField(max_length=50, blank=False, null=False, default=AUTH_PROVIDERS.get('email'))
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    objects = AccountManager()
 
     USERNAME_FIELD = "email"
-
-    REQUIRED_FIELDS = ["first_name", "last_name"]
-
-    objects = UserManager()
-
-    def tokens(self):    
-        refresh = RefreshToken.for_user(self)
-        return {
-            "refresh":str(refresh),
-            "access":str(refresh.access_token)
-        }
-
+    REQUIRED_FIELDS = ["username"]
 
     def __str__(self):
-        return self.email
+        return self.username
 
-    @property
-    def get_full_name(self):
-        return f"{self.first_name.title()} {self.last_name.title()}"
+    def has_perm(self, perm, obj=None):
+         return True
 
-
-class OneTimePassword(models.Model):
-    user=models.OneToOneField(UserAccount, on_delete=models.CASCADE)
-    otp=models.CharField(max_length=6)
-
-
-    def __str__(self):
-        return f"{self.user.first_name} - otp code"
+    def has_module_perms(self, app_label):
+        return True

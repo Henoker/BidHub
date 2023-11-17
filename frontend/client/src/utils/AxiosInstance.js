@@ -5,6 +5,7 @@ const baseURL = 'http://localhost:8000/api/v1/';
 const AxiosInstance = axios.create({
   baseURL: baseURL,
   withCredentials: true, // Enable sending cookies with requests
+
 });
 
 export default AxiosInstance;

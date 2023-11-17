@@ -1,5 +1,5 @@
 import Layout from './Layout'
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
 import AxiosInstance from "../utils/AxiosInstance";
@@ -7,8 +7,8 @@ import AxiosInstance from "../utils/AxiosInstance";
 
 
 const DashboardPage = () => {
-	const jwt=localStorage.getItem('token')
-	const user = JSON.parse(localStorage.getItem('user'))
+	// const user = JSON.parse(localStorage.getItem('user'))
+	const [userName, setUserName] = useState('');
     const navigate = useNavigate();
 
 	useEffect(() => {
@@ -19,7 +19,10 @@ const DashboardPage = () => {
 		try {
 			const res =await AxiosInstance.get('auth/get-something/')
 		 	console.log(res.data)
-			
+			if (res.data && res.data.user && res.data.user.full_name) {
+				setUserName(res.data.user.full_name);
+			}
+			console.log('full_name')
 		} catch (error) {
 			console.error('Error fetching data:', error);
 		}
@@ -46,7 +49,7 @@ const DashboardPage = () => {
     <div className="container flex flex-col items-center px-4 py-12 mx-auto text-center">
       <h2 className="max-w-2xl mx-auto text-2xl font-semibold tracking-tight xl:text-3xl text-white">
 	  welcome to your profile{" "}
-        <span className="text-blue-500">{user && user.full_name}.</span>
+        <span className="text-blue-500">{userName}</span>
       </h2>
       <p className="max-w-4xl mt-6 text-center text-gray-300">
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cum quidem
