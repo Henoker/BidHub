@@ -1,27 +1,31 @@
 import React from 'react';
 import { Navigate, Routes, Route } from 'react-router-dom'; 
-import HomePage from './components/HomePage';
-import RegisterPage from './components/RegisterPage';
-import VerifyEmail from './components/VerifyEmail';
-import LoginPage from './components/LoginPage';
-import DashboardPage from './components/DashboardPage';
-import PasswordResetRequest from './components/PasswordResetRequest';
-import ResetPassword from './components/ResetPassword';
 import Home from './pages/Home';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import AuthMiddleware from './middleware/Auth';
+import User from './pages/auth/User';
+import Navbar from './components/Navbar';
 
 const App = () => {
 
   return (
+    <>
+    <Navbar />
     <Routes>
       <Route path='/' element={<Home/>} />
       <Route path='/auth'>
         <Route path='login' element={<Login/>} />
         <Route path='register' element={<Register />} />
+        <Route path='user' element={<AuthMiddleware />}>
+          <Route index element = {<User />} />
+        </Route>
+        
       </Route>
       <Route path='*' element={<Navigate to='/' />} />
     </Routes>
+    </>
+    
     
 
           

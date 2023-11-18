@@ -25,9 +25,9 @@ const authReducer = (state, action) => {
 // Initial state
 const initialState = {
   user: {},
-  accessToken: null,
-  refreshToken: null,
-  csrftoken: null,
+  accessToken: '',
+  refreshToken: '',
+  csrftoken: '',
 };
 
 // Create context
@@ -67,8 +67,6 @@ export const AuthContextProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};
+
 
 export default AuthContextProvider;

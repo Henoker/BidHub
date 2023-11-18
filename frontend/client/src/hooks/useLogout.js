@@ -1,21 +1,27 @@
-import useAuth from "./useAuth"
-import { axiosPrivateInstance } from "../axios"
+import { axiosPrivateInstance } from "../axios/AxiosInstance";
+import useAuth from "./useAuth";
 
 export default function useLogout() {
-    const { setUser, setAccessToken, setCSRFToken } = useAuth()
+  const { setUser, setAccessToken, setCSRFToken } = useAuth();
 
-    const logout = async () => {
-        try {
-            const response = await axiosPrivateInstance.post("auth/logout")
+  const logout = async () => {
+    try {
+      const response = await axiosPrivateInstance.post("auth/logout");
 
-            setAccessToken(null)
-            setCSRFToken(null)
-            setUser({})
-
-        } catch (error) {
-            console.log(error)
-        }
+      if (response.status === 200) {
+        // Logout successful
+        setAccessToken(null);
+        setCSRFToken(null);
+        setUser({});
+      } else {
+        // Handle unexpected response status
+        console.error("Unexpected response status during logout:", response.status);
+      }
+    } catch (error) {
+      // Handle logout error
+      console.error("Error during logout:", error);
     }
+  };
 
-    return logout
+  return logout;
 }
