@@ -7,8 +7,8 @@ export default function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
+	username: '',
     password: '',
-    username: '',
     password2: '',
   });
 
@@ -81,9 +81,9 @@ export default function Register() {
 				        <label for="first_name" className="block text-sm">Username</label>
 				        <input 
 				        type="text" 
-				        name="first_name" 
+				        name="username" 
 				        value={formData.username} 
-				        placeholder="Jhon"
+				        placeholder="John"
 				        onChange={handleChange}
 				        required
 				        className="w-full px-3 py-2 border rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:border-indigo-400" 

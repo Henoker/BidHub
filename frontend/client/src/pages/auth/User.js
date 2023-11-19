@@ -39,7 +39,7 @@ export default function User() {
   }, [axiosPrivateInstance, setUser]);
 
   return (
-    <div>
+    <div className='bg-gray-900'>
       <h3>{user?.username}</h3>
       <h4>{user?.email}</h4>
       <button disabled={loading} type="button" onClick={onLogout}>

@@ -15,7 +15,6 @@ export default function useRefreshToken() {
       // Handle refresh error, e.g., log out the user
       console.error('Error refreshing access token:', error);
       // Redirect to the login page or perform any other necessary action
-      // logout();
       throw error; // Propagate the error so that the caller can handle it
     }
   };
