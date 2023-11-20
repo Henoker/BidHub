@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth';
-import { AxiosInstance } from '../../axios/AxiosInstance';
+import useAuth from '../hooks/useAuth';
+import { AxiosInstance } from '../axios/AxiosInstance';
 
 export default function Login() {
   const { setAccessToken, setCSRFToken } = useAuth();
@@ -103,7 +103,7 @@ export default function Login() {
                     Password
                   </label>
                   <Link
-                    to="/forget-password"
+                    to="/reset-password"
                     className="text-sm text-gray-400 focus:text-blue-500 hover:text-blue-500 hover:underline"
                   >
                     Forgot password?

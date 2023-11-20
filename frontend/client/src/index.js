@@ -2,19 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './tailwind.css';
-import AuthContextProvider from './store/auth-context';
-import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from './app/store';
+
+
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-    <AuthContextProvider>
+    <Provider store={store}>
       <App />
-    </AuthContextProvider>
-    </BrowserRouter>
-    
+    </Provider>    
   </React.StrictMode>
 );
 

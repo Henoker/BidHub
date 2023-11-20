@@ -1,49 +1,55 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { AxiosInstance } from '../../axios/AxiosInstance';
+import { toast } from 'react-toastify'
+import { useDispatch, useSelector } from 'react-redux';
+import { register } from '../features/auth/authSlice';
+
 
 
 export default function Register() {
-  const navigate = useNavigate();
+ 
   const [formData, setFormData] = useState({
-    email: '',
-	username: '',
-    password: '',
-    password2: '',
-  });
+	"first_name": "",
+	"last_name": "",
+	"email": "",
+	"password": "",
+	"re_password": "",
+})
 
-  const [loading, setLoading] = useState(false);
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
+const { first_name, last_name, email, password, re_password } = formData
 
-  const onSubmitForm = async (event) => {
-    event.preventDefault();
-    setLoading(true);
+const dispatch = useDispatch()
 
-    try {
-      const response = await AxiosInstance.post('auth/register', JSON.stringify(formData))
+const {user, isLoading, isError, isSuccess, message} = useSelector((state) => state.auth)
 
-      
+const handleChange = (e) => {
+	setFormData((prev) => ({
+		...prev,
+		[e.target.name]: e.target.value
+	})
+	)
+}
 
-      setFormData({
-        email: '',
-        username: '',
-        password: '',
-        password2: '',
-      });
 
-      setLoading(false);
-      navigate('/auth/login');
-    } catch (error) {
-      setLoading(false);
-      // TODO: handle errors
-    }
-  };
+const handleSubmit = (e) => {
+	e.preventDefault()
+
+
+	if (password !== re_password) {
+		toast.error("Passwords do not match")
+	} else {
+		const userData = {
+			first_name,
+			last_name,
+			email,
+			password,
+			re_password
+		}
+		dispatch(register(userData))
+		
+	}
+}
+ 
 
   return (
     <section className="bg-gray-900">
@@ -63,7 +69,7 @@ export default function Register() {
 		      <Link to="/login" rel="noopener noreferrer" className="focus:underline hover:underline">Sign in here</Link>
 	        </p>
 
-          <form novalidate="" action="" onSubmit={onSubmitForm} className="space-y-8">
+          <form novalidate="" action="" onSubmit={handleSubmit}  className="space-y-8">
             <div className="space-y-4">
               <div className="space-y-2">
                 <label for="email" className="block text-sm">Email address</label>
@@ -78,11 +84,23 @@ export default function Register() {
 				        />
 			        </div>
 			        <div className="space-y-2">
-				        <label for="first_name" className="block text-sm">Username</label>
+				        <label for="first_name" className="block text-sm">First Name</label>
 				        <input 
 				        type="text" 
-				        name="username" 
-				        value={formData.username} 
+				        name="first_name" 
+				        value={formData.first_name} 
+				        placeholder="John"
+				        onChange={handleChange}
+				        required
+				        className="w-full px-3 py-2 border rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:border-indigo-400" 
+				        />
+			        </div>
+					<div className="space-y-2">
+				        <label for="last_name" className="block text-sm">Last Name</label>
+				        <input 
+				        type="text" 
+				        name="last_name" 
+				        value={formData.last_name} 
 				        placeholder="John"
 				        onChange={handleChange}
 				        required
@@ -109,8 +127,8 @@ export default function Register() {
 				      </div>
               <input 
 				      type="password" 
-				      name="password2" 
-				      value={formData.password2} 
+				      name="re_password" 
+				      value={formData.re_password} 
 				      placeholder="*****"
 				      onChange={handleChange}
 				      required 
@@ -122,7 +140,6 @@ export default function Register() {
 		      type="submit" 
 		      className="w-full px-8 py-3 font-semibold rounded-md bg-indigo-400 text-gray-900"
 		      Value="Submit"
-          disabled={loading}
 		      />
 	      </form>
       </div>
