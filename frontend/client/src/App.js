@@ -7,6 +7,9 @@ import Navbar from './components/Navbar';
 import NotFoundPage from './pages/NotFoundPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import ActivatePage from './pages/ActivatePage';
+import ResetPasswordPageConfirm from './pages/ResetPasswordPageConfirm';
+import Dashboard from './pages/Dashboard';
+import { ToastContainer } from 'react-toastify';
 
 
 
@@ -16,14 +19,18 @@ const App = () => {
     <>
     <Router>
       <Navbar />
-      <Route path='/' element={<Home />} />
-      <Route path='/login' element={<Login />} />
-      <Route path='/register' element={<Register />} />
-      <Route path="/activate/:uid/:token" element={<ActivatePage />} />
-      <Route path="/reset-password" element={<ResetPasswordPage />} />
-      <Route path='*' element={<NotFoundPage />} />
-
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+        <Route path="/activate/:uid/:token" element={<ActivatePage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/password/reset/confirm/:uid/:token" element={<ResetPasswordPageConfirm />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path='*' element={<NotFoundPage />} />
+      </Routes>
     </Router>
+    <ToastContainer />
     </>
     
     

@@ -1,44 +1,60 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
-import useAuth from '../hooks/useAuth';
-import { AxiosInstance } from '../axios/AxiosInstance';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux'
+import { login, reset, getUserInfo } from '../features/auth/authSlice'
+import { toast } from 'react-toastify'
+import Spinner from "../components/Spinner"
+
 
 export default function Login() {
-  const { setAccessToken, setCSRFToken } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const fromLocation = location?.state?.from?.pathname || '/';
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({
+    "email": "",
+    "password": "",
+})
 
-  const onInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
+const { email, password } = formData
 
-  const onSubmitForm = async (event) => {
-    event.preventDefault();
+const dispatch = useDispatch()
+const navigate = useNavigate()
 
-    setLoading(true);
+const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth)
 
-    try {
-      const response = await AxiosInstance.post('auth/login', JSON.stringify(formData));
+const handleChange = (e) => {
+    setFormData((prev) => ({
+        ...prev,
+        [e.target.name]: e.target.value
+    })
+    )
+}
 
-      setAccessToken(response?.data?.accessToken);
-      setCSRFToken(response.headers['x-csrf-token']);
-      setFormData({ email: '', password: '' });
-      setLoading(false);
+const handleSubmit = (e) => {
+    e.preventDefault()
 
-      navigate(fromLocation, { replace: true });
-    } catch (error) {
-      setLoading(false);
-      console.error('Login failed:', error);
-      // Handle errors, e.g., show error message to the user
+    const userData = {
+        email,
+        password,
     }
-  };
+    dispatch(login(userData))
+}
 
 
-  return (
+useEffect(() => {
+    if (isError) {
+        toast.error(message)
+    }
+
+    if (isSuccess || user) {
+        navigate("/dashboard")
+    }
+
+    dispatch(reset())
+    dispatch(getUserInfo())
+
+}, [isError, isSuccess, user, navigate, dispatch, message])
+
+
+
+return (
     <div className="bg-gray-900">
     <div className="flex justify-center h-screen">
       <div
@@ -76,7 +92,8 @@ export default function Login() {
             </p>
           </div>
           <div className="mt-8">
-            <form onSubmit={onSubmitForm}>
+             {isLoading && <Spinner />}
+            <form onSubmit={handleSubmit}>
               <div>
                 <label
                   htmlFor="email"
@@ -85,11 +102,11 @@ export default function Login() {
                   Email Address
                 </label>
                 <input
-                  type="email"
+                  type="text"
                   name="email"
                   placeholder="example@example.com"
-                  onChange={onInputChange}
-                  value={formData.email}
+                  onChange={handleChange}
+                  value={email}
                   required
                   className="block w-full px-4 py-2 mt-2 border rounded-lg placeholder-gray-600 bg-gray-900 text-gray-300 border-gray-700 focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
                 />
@@ -112,8 +129,8 @@ export default function Login() {
                 <input
                   type="password"
                   name="password"
-                  value={formData.password}
-                  onChange={onInputChange}
+                  value={password}
+                  onChange={handleChange}
                   required
                   className="block w-full px-4 py-2 mt-2 border rounded-lg placeholder-gray-600 bg-gray-900 text-gray-300 border-gray-700 focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
                 />
@@ -122,7 +139,7 @@ export default function Login() {
               
 							<button 
               className="w-full mt-6 px-4 py-2 tracking-wide text-white transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:bg-blue-400 focus:ring focus:ring-blue-300 focus:ring-opacity-50"
-              disabled={loading}>
+              >
 							<span>Login </span>
            	  </button>
             </form>

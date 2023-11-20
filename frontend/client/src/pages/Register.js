@@ -1,54 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux';
-import { register } from '../features/auth/authSlice';
+import { register, reset } from '../features/auth/authSlice';
+import Spinner from '../components/Spinner';
 
 
 
 export default function Register() {
  
-  const [formData, setFormData] = useState({
-	"first_name": "",
-	"last_name": "",
-	"email": "",
-	"password": "",
-	"re_password": "",
-})
+	const [formData, setFormData] = useState({
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "password": "",
+        "re_password": "",
+    })
 
-const { first_name, last_name, email, password, re_password } = formData
+    const { first_name, last_name, email, password, re_password } = formData
 
-const dispatch = useDispatch()
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
-const {user, isLoading, isError, isSuccess, message} = useSelector((state) => state.auth)
+    const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth)
 
-const handleChange = (e) => {
-	setFormData((prev) => ({
-		...prev,
-		[e.target.name]: e.target.value
-	})
-	)
-}
+    const handleChange = (e) => {
+        setFormData((prev) => ({
+            ...prev,
+            [e.target.name]: e.target.value
+        })
+        )
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
 
 
-const handleSubmit = (e) => {
-	e.preventDefault()
+        if (password !== re_password) {
+            toast.error("Passwords do not match")
+        } else {
+            const userData = {
+                first_name,
+                last_name,
+                email,
+                password,
+                re_password
+            }
+            dispatch(register(userData))
+        }
+    }
 
 
-	if (password !== re_password) {
-		toast.error("Passwords do not match")
-	} else {
-		const userData = {
-			first_name,
-			last_name,
-			email,
-			password,
-			re_password
-		}
-		dispatch(register(userData))
-		
-	}
-}
+    useEffect(() => {
+        if (isError) {
+            toast.error(message)
+        }
+
+        if (isSuccess || user) {
+            navigate("/")
+            toast.success("An activation email has been sent to your email. Please check your email")
+        }
+
+        dispatch(reset())
+
+    }, [isError, isSuccess, user, navigate, message, dispatch])
+
+
  
 
   return (
@@ -68,7 +85,7 @@ const handleSubmit = (e) => {
           <p className="text-sm text-center text-gray-400">Already Registered?
 		      <Link to="/login" rel="noopener noreferrer" className="focus:underline hover:underline">Sign in here</Link>
 	        </p>
-
+			{isLoading && <Spinner />}
           <form novalidate="" action="" onSubmit={handleSubmit}  className="space-y-8">
             <div className="space-y-4">
               <div className="space-y-2">

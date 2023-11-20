@@ -1,5 +1,6 @@
 import React from 'react'
 
+
 export default function NotFoundPage() {
   return (
     <section className="bg-gray-900 ">
@@ -39,11 +40,9 @@ export default function NotFoundPage() {
         </div>
       </div>
       <div className="relative w-full mt-12 lg:w-1/2 lg:mt-0">
-        <img
-          className="w-full max-w-lg lg:mx-auto"
-          src="/images/components/illustration.svg"
-          alt=""
-        />
+      <h2 className="mb-8 font-extrabold text-9xl text-gray-600">
+				<span className="sr-only">Error</span>404
+			</h2>
       </div>
     </div>
   </section>
