@@ -55,7 +55,7 @@ export default function ResetPasswordPageConfirm() {
 
     }, [isError, isSuccess, message, navigate, dispatch])
   return (
-    <div className="w-full max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800">
+    <div className="w-full max-w-sm mx-auto overflow-hidden rounded-lg shadow-md bg-gray-800">
     <div className="px-6 py-4">
       <div className="flex justify-center mx-auto">
         <img
@@ -64,7 +64,7 @@ export default function ResetPasswordPageConfirm() {
           alt=""
         />
       </div>
-      <h3 className="mt-3 text-xl font-medium text-center text-gray-600 dark:text-gray-200">
+      <h3 className="mt-3 text-xl font-medium text-center text-gray-200">
         Reset Your Password
       </h3>
 
@@ -73,7 +73,7 @@ export default function ResetPasswordPageConfirm() {
       <form>
         <div className="w-full mt-4">
           <input
-            className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-500 bg-white border rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+            className="block w-full px-4 py-2 mt-2  border rounded-lg bg-gray-800 border-gray-600 placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
             type="password"
             placeholder="New password"
             aria-label="New Password"
@@ -85,7 +85,7 @@ export default function ResetPasswordPageConfirm() {
         </div>
         <div className="w-full mt-4">
           <input
-            className="block w-full px-4 py-2 mt-2 text-gray-700 placeholder-gray-500 bg-white border rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
+            className="block w-full px-4 py-2 mt-2  border rounded-lg bg-gray-800 border-gray-600 placeholder-gray-400 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-opacity-40 focus:outline-none focus:ring focus:ring-blue-300"
             type="password"
             placeholder="Confirm new password"
             aria-label="Confirm new password"

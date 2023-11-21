@@ -62,11 +62,6 @@ export default function Home() {
           </p>
         </div>
       </div>
-      {/* <div className="w-full space-x-4 mt-8 bg-transparent rounded-md lg:max-w-sm">
-       
-			<Link to="/login" className="px-8 py-3 font-semibold rounded bg-indigo-400 text-gray-900">Login</Link>
-			<Link to="/register" className="px-8 py-3 font-semibold rounded bg-indigo-400 text-gray-900">Register</Link>
-      </div> */}
     </div>
     <div className="flex items-center justify-center w-full h-96 lg:w-1/2">
       <img
