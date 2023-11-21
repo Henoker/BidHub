@@ -1,5 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Home from './pages/Home';
@@ -9,8 +11,7 @@ import ResetPasswordPage from './pages/ResetPasswordPage';
 import ActivatePage from './pages/ActivatePage';
 import ResetPasswordPageConfirm from './pages/ResetPasswordPageConfirm';
 import Dashboard from './pages/Dashboard';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
 
 
 
@@ -36,12 +37,7 @@ const App = () => {
     <ToastContainer />
     </>
     
-    
-
-          
-   
-    
-        )
+  )
   
 }
 

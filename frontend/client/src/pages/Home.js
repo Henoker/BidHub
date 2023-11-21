@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
 export default function Home() {
   return (
     <section className='bg-gray-900'>
@@ -77,6 +76,6 @@ export default function Home() {
       />
     </div>
   </div>
-            </section>
+</section>
   )
 }
