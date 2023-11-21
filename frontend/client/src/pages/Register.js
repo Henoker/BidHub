@@ -70,7 +70,7 @@ export default function Register() {
 
   return (
     <section className="bg-gray-900">
-      <div className="flex justify-normal min-h-screen">
+      <div className="flex justify-center min-h-screen">
 				<div
 				className="hidden bg-cover lg:block lg:w-2/5"
 				style={{
@@ -79,86 +79,102 @@ export default function Register() {
        		    }}
       	>
 			  </div>
-				
-				<div className="w-full max-w-md p-4 rounded-md shadow sm:p-8 bg-gray-900 text-gray-100">
-          <h2 className="mb-3 text-3xl font-semibold text-center">Register to Bid</h2>
-          <p className="text-sm text-center text-gray-400">Already Registered?
-		      <Link to="/login" rel="noopener noreferrer" className="focus:underline hover:underline">Sign in here</Link>
-	        </p>
-			{isLoading && <Spinner />}
-          <form novalidate="" action="" onSubmit={handleSubmit}  className="space-y-8">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label for="email" className="block text-sm">Email address</label>
-                <input
-                type="email" 
-				        name="email" 
-				        value={formData.email} 
-				        placeholder="leroy@jenkins.com"
-				        onChange={handleChange} 
-				        required
-				        className="w-full px-3 py-2 border rounded-md border-gray-700 bg-gray-900 text-gray-100 dark:border-indigo-400" 
-				        />
-			        </div>
-			        <div className="space-y-2">
-				        <label for="first_name" className="block text-sm">First Name</label>
-				        <input 
-				        type="text" 
-				        name="first_name" 
-				        value={formData.first_name} 
-				        placeholder="John"
-				        onChange={handleChange}
-				        required
-				        className="w-full px-3 py-2 border rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:border-indigo-400" 
-				        />
-			        </div>
-					<div className="space-y-2">
-				        <label for="last_name" className="block text-sm">Last Name</label>
-				        <input 
-				        type="text" 
-				        name="last_name" 
-				        value={formData.last_name} 
-				        placeholder="John"
-				        onChange={handleChange}
-				        required
-				        className="w-full px-3 py-2 border rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:border-indigo-400" 
-				        />
-			        </div>
-			        <div className="space-y-2">
-				        <div className="flex justify-between">
-					        <label for="password" className="text-sm">Password</label>
-				        </div>
-                <input 
-				        type="password" 
-				        name="password" 
-				        value={formData.password} 
-				        placeholder="*****"
-				        onChange={handleChange}
-				        required 
-				        className="w-full px-3 py-2 border rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:border-indigo-400" 
-				        />
-		      	</div>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <label for="password2" className="text-sm">Confirm Password</label>
-				      </div>
-              <input 
-				      type="password" 
-				      name="re_password" 
-				      value={formData.re_password} 
-				      placeholder="*****"
-				      onChange={handleChange}
-				      required 
-				      className="w-full px-3 py-2 border rounded-md border-gray-700 bg-gray-900 text-gray-100 focus:border-indigo-400" 
-				      />
-			      </div>
-		      </div>
-          <input
-		      type="submit" 
-		      className="w-full px-8 py-3 font-semibold rounded-md bg-indigo-400 text-gray-900"
-		      Value="Submit"
-		      />
+		      <div className="flex items-center w-full max-w-3xl p-8 mx-auto lg:px-12 lg:w-3/5">
+				<div className='w-full'>
+				<h2 className="mb-3 text-3xl font-semibold text-gray-200 text-center">Register to Bid</h2>
+                <p className="text-sm text-center text-gray-400">Already Registered?
+		        <Link to="/login" rel="noopener noreferrer" className="focus:underline hover:underline">Sign in here</Link>
+	            </p>
+			    {isLoading && <Spinner />}
+          <form novalidate="" action="" onSubmit={handleSubmit}  className="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2">
+		  <div>
+      <label className="block mb-2 text-sm text-gray-200">
+        First Name
+      </label>
+      <input
+        type="text"
+		name="first_name"
+        value={formData.first_name} 
+		placeholder="John"
+		onChange={handleChange}
+		required
+        className="block w-full px-5 py-3 mt-2  border rounded-lg placeholder-gray-600 bg-gray-900 text-gray-300 border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+      />
+    </div>
+    <div>
+      <label className="block mb-2 text-sm text-gray-200">
+        Last name
+      </label>
+      <input
+        type="text"
+        name="last_name" 
+		value={formData.last_name} 
+		placeholder="John"
+		onChange={handleChange}
+		required
+        className="block w-full px-5 py-3 mt-2 border rounded-lg placeholder-gray-600 bg-gray-900 text-gray-300 border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+      />
+    </div>
+    
+    <div>
+      <label className="block mb-2 text-sm text-gray-200">
+        Email address
+      </label>
+      <input
+        type="email"
+		name='email'
+        value={formData.email} 
+	    placeholder="leroy@jenkins.com"
+		onChange={handleChange} 
+		required
+        className="block w-full px-5 py-3 mt-2 border rounded-lg placeholder-gray-600 bg-gray-900 text-gray-300 border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+      />
+    </div>
+    <div>
+      <label className="block mb-2 text-sm text-gray-200">
+        Password
+      </label>
+      <input
+        type="password"
+        name="password" 
+		value={formData.password} 
+		placeholder="*****"
+	    onChange={handleChange}
+	    required 
+        className="block w-full px-5 py-3 mt-2 border rounded-lg placeholder-gray-600 bg-gray-900 text-gray-300 border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+      />
+    </div>
+    <div>
+      <label className="block mb-2 text-sm text-gray-200">
+        Confirm password
+      </label>
+      <input
+        type="password"
+		name="re_password" 
+		value={formData.re_password} 
+		placeholder="*****"
+		onChange={handleChange}
+		required
+        className="block w-full px-5 py-3 mt-2 border rounded-lg placeholder-gray-600 bg-gray-900 text-gray-300 border-gray-700 focus:border-blue-400 dark:focus:border-blue-400 focus:ring-blue-400 focus:outline-none focus:ring focus:ring-opacity-40"
+      />
+    </div>
+					<button
+                        className="flex items-center justify-between w-full px-6 py-3 text-sm tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+						type="submit"
+						Value="Submit"
+						>
+                        <span>Register </span>
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 rtl:-scale-x-100" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
 	      </form>
+
+				</div>
+				
       </div>
       		
    	  </div>
