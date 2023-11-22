@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "djoser",
     # Local apps
     "users.apps.UsersConfig",
+    "auctions.apps.AuctionsConfig",
 ]
 
 MIDDLEWARE = [
