@@ -1,9 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchAuctionListings } from '../features/auction/auctionSlice';
 
 export default function Dashboard() {
+	const dispatch = useDispatch();
+	const auctionListings = useSelector((state) => state.auctions.data);
+
+	useEffect(() => {
+		dispatch(fetchAuctionListings());
+	}, [dispatch])
   return (
     <section className="py-6 sm:py-12 bg-gray-800 text-gray-100">
-	<div className="container p-6 mx-auto space-y-8">
+		<div>
+			<h2>Auction Listings</h2>
+			<ul>
+				{auctionListings.map((listing) => (
+					<li key={listing.id}>{listing.name_of_item}</li>
+       			))}
+      		</ul>
+    	</div>
+	{/* <div className="container p-6 mx-auto space-y-8">
 		<div className="space-y-2 text-center">
 			<h2 className="text-3xl font-bold">Partem reprimique an pro</h2>
 			<p className="font-serif text-sm text-gray-400">Qualisque erroribus usu at, duo te agam soluta mucius.</p>
@@ -66,7 +82,7 @@ export default function Dashboard() {
 				</div>
 			</article>
 		</div>
-	</div>
+	</div> */}
 </section>
   )
 }
