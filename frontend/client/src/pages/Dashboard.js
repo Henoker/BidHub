@@ -1,22 +1,32 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchAuctionListings } from '../features/auction/auctionSlice';
+import { getAuctionListings, reset } from '../features/auction/auctionSlice';
+import Spinner from '../components/Spinner';
 
 export default function Dashboard() {
+	const { listings, isLoading, isError, isSuccess, message } = useSelector((state) => state.listing);
 	const dispatch = useDispatch();
-	const auctionListings = useSelector((state) => state.auctions.data);
+
 
 	useEffect(() => {
-		dispatch(fetchAuctionListings());
+		dispatch(getAuctionListings());
+
+		return () => {
+			dispatch(reset());
+		  };
 	}, [dispatch])
+
+	if (isLoading) {
+		return <Spinner/>
+	}
   return (
     <section className="py-6 sm:py-12 bg-gray-800 text-gray-100">
 		<div>
-			<h2>Auction Listings</h2>
+			<h1>Auction Listings</h1>
 			<ul>
-				{auctionListings.map((listing) => (
-					<li key={listing.id}>{listing.name_of_item}</li>
-       			))}
+				{listings && listings.map((listing) => (
+          		<li key={listing.id}>{/* Render your listing data here */}</li>
+        		))}
       		</ul>
     	</div>
 	{/* <div className="container p-6 mx-auto space-y-8">
