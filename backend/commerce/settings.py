@@ -2,7 +2,7 @@ from pathlib import Path
 from datetime import timedelta
 from environs import Env
 import os
-env = Env() 
+env = Env()
 env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     # "djoser",
     # Local apps
     "users.apps.UsersConfig",
-   
+    "auctions.apps.AuctionsConfig",
+
 ]
 
 MIDDLEWARE = [
@@ -129,8 +130,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [str(BASE_DIR.joinpath('static'))] # new
-STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles')) # new
+STATICFILES_DIRS = [str(BASE_DIR.joinpath('static'))]  # new
+STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))  # new
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
@@ -172,7 +173,7 @@ AUTH_USER_MODEL = 'users.User'
 #     'SERIALIZERS': {
 #         'user_create': 'users.serializers.CreateUserSerializer',
 #         'user': "users.serializers.CreateUserSerializer",
-#         'user_delete': "djoser.serializers.UserDeleteSerializer",      
+#         'user_delete': "djoser.serializers.UserDeleteSerializer",
 #     },
 # }
 
@@ -180,6 +181,6 @@ AUTH_USER_MODEL = 'users.User'
 EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL='hennybany@gmail.com'
-EMAIL_USE_TLS=True
+DEFAULT_FROM_EMAIL = 'hennybany@gmail.com'
+EMAIL_USE_TLS = True
 EMAIL_PORT = '2525'
