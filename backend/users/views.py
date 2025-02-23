@@ -6,8 +6,8 @@ from .serializers import UserSerializer
 class RegisterApiView(APIView):
     def post(self, request):
         data = request.data
-        if data['password']!= data['password_confirmation']:
-            raise exceptions.ApiException('Passwords do not match')
+        if data['password']!= data['password_confirm']:
+            raise exceptions.ApiException('Passwords do not match!')
         serializer = UserSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
