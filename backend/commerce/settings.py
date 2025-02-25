@@ -16,8 +16,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env.str("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-env.bool("DEBUG", default=False)
-
+# env.bool("DEBUG", default=False)
+DEBUG = True
 ALLOWED_HOSTS = ['*', 'localhost']
 
 
@@ -34,8 +34,8 @@ INSTALLED_APPS = [
     # Third-party apps
     "rest_framework",
     "corsheaders",
-    # "rest_framework_simplejwt",
-    # "djoser",
+    "rest_framework_simplejwt",
+    "djoser",
     # Local apps
     "users.apps.UsersConfig",
     "auctions.apps.AuctionsConfig",
@@ -44,9 +44,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -126,8 +126,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [str(BASE_DIR.joinpath('static'))]  # new
-STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))  # new
+STATICFILES_DIRS = [str(BASE_DIR.joinpath('static'))]  # For development
+STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))  # For production
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
@@ -137,41 +137,41 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = 'users.User'
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',
-#     ),
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
 
-# SIMPLE_JWT = {
-#     "AUTH_HEADER_TYPES": (
-#         "Bearer",
-#         "JWT"),
-#     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
-#     "REFRESH_TOKEN_LIFETIME": timedelta(days=60),
-#     "SIGNING_KEY": env("SIGNING_KEY"),
-#     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
-#     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
-# }
+SIMPLE_JWT = {
+    "AUTH_HEADER_TYPES": (
+        "Bearer",
+        "JWT"),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=60),
+    "SIGNING_KEY": env("SIGNING_KEY"),
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
+}
 
-# DJOSER = {
-#     'LOGIN_FIELD': 'email',
-#     "USER_CREATE_PASSWORD_RETYPE": True,
-#     "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
-#     "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
-#     "SEND_CONFIRMATION_EMAIL": True,
-#     "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
-#     "SET_PASSWORD_RETYPE": True,
-#     "PASSWORD_RESET_CONFIRM_RETYPE": True,
-#     'USERNAME_RESET_CONFIRM_URL': 'username/reset/confirm/{uid}/{token}',
-#     'ACTIVATION_URL': 'activate/{uid}/{token}',
-#     'SEND_ACTIVATION_EMAIL': True,
-#     'SERIALIZERS': {
-#         'user_create': 'users.serializers.CreateUserSerializer',
-#         'user': "users.serializers.CreateUserSerializer",
-#         'user_delete': "djoser.serializers.UserDeleteSerializer",
-#     },
-# }
+DJOSER = {
+    'LOGIN_FIELD': 'email',
+    "USER_CREATE_PASSWORD_RETYPE": True,
+    "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
+    "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
+    "SEND_CONFIRMATION_EMAIL": True,
+    "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
+    "SET_PASSWORD_RETYPE": True,
+    "PASSWORD_RESET_CONFIRM_RETYPE": True,
+    'USERNAME_RESET_CONFIRM_URL': 'username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SERIALIZERS': {
+        'user_create': 'users.serializers.CreateUserSerializer',
+        'user': "users.serializers.CreateUserSerializer",
+        'user_delete': "djoser.serializers.UserDeleteSerializer",
+    },
+}
 
 
 EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
