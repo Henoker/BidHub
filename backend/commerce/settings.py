@@ -29,13 +29,13 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     # Third-party apps
     "rest_framework",
     "corsheaders",
     "rest_framework_simplejwt",
     "djoser",
+    "whitenoise.runserver_nostatic",
     # Local apps
     "users.apps.UsersConfig",
     "auctions.apps.AuctionsConfig",
@@ -180,3 +180,20 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = 'hennybany@gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = '2525'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        },
+    },
+}
