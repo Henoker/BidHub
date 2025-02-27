@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "djoser",
     "whitenoise.runserver_nostatic",
+    "django_rest_passwordreset",
+    "knox",
     # Local apps
     "users.apps.UsersConfig",
     "auctions.apps.AuctionsConfig",
@@ -135,7 +137,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'users.CustomUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

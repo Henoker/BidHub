@@ -36,5 +36,3 @@ class Comments(models.Model):
         User, on_delete=models.CASCADE, related_name="comments")
     listing = models.ForeignKey(
         AuctionListings, on_delete=models.CASCADE, related_name="comments")
-
-# Create your models here.

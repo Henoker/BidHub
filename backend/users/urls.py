@@ -1,8 +1,10 @@
+from django.contrib import admin
 from django.urls import path
-from users import views
+from rest_framework.routers import DefaultRouter
+from .views import *
 
-app_name = "users"
-
-urlpatterns = [
-  path('register', views.RegisterApiView.as_view()),
-  ]
+router = DefaultRouter()
+router.register('register', RegisterViewset, basename='register')
+router.register('login', LoginViewset, basename='login')
+router.register("users", UserViewset, basename="users")
+urlpatterns = router.urls
