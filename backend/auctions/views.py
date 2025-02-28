@@ -7,12 +7,14 @@ from rest_framework.permissions import IsAuthenticated
 from .models import AuctionListings, Bid, Comments
 from .serializers import AuctionListingsSerializer, BidSerializer, CommentsSerializer
 from django.contrib.auth import get_user_model
+from knox.auth import TokenAuthentication
 
 User = get_user_model()
 
 
 class CreateListingView(APIView):
     permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def post(self, request):
         user = request.user
