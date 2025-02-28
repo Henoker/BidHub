@@ -42,6 +42,7 @@ class CreateListingView(APIView):
 
 class DisplayListingView(APIView):
     permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def get(self, request, listing_id):
         listing = AuctionListings.objects.get(pk=listing_id)
@@ -60,6 +61,7 @@ class DisplayListingView(APIView):
 
 class WatchlistView(APIView):
     permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def post(self, request, listing_id):
         user = request.user
@@ -76,6 +78,7 @@ class WatchlistView(APIView):
 
 class CloseAuctionView(APIView):
     permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def post(self, request, listing_id):
         listing = AuctionListings.objects.get(pk=listing_id)
@@ -86,6 +89,7 @@ class CloseAuctionView(APIView):
 
 class AddCommentView(APIView):
     permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def post(self, request, listing_id):
         user = request.user
@@ -98,6 +102,7 @@ class AddCommentView(APIView):
 
 class WatchlistListView(APIView):
     permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def get(self, request):
         user = request.user
@@ -118,6 +123,7 @@ class CategoryView(APIView):
 
 class NewBidView(APIView):
     permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
 
     def post(self, request, listing_id):
         listing = AuctionListings.objects.get(pk=listing_id)

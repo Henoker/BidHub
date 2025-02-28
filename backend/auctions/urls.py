@@ -17,5 +17,5 @@ urlpatterns = [
     path('watchlist/', WatchlistListView.as_view(), name='watchlist-list'),
     path('category/', CategoryView.as_view(), name='category'),
     path('new-bid/<int:listing_id>/', NewBidView.as_view(), name='new-bid'),
-    path('', IndexView.as_view(), name='index'),
+    path('listing/', IndexView.as_view(), name='index'),
 ]
