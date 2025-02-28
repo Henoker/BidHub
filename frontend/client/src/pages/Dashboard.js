@@ -1,35 +1,37 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { getAuctionListings, reset } from '../features/auction/auctionSlice';
-import Spinner from '../components/Spinner';
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+// import { getAuctionListings, reset } from '../features/auction/auctionSlice';
+import Spinner from "../components/Spinner";
 
 export default function Dashboard() {
-	const { listings, isLoading, isError, isSuccess, message } = useSelector((state) => state.listing);
-	const dispatch = useDispatch();
+  //   const { listings, isLoading, isError, isSuccess, message } = useSelector(
+  //     (state) => state.listing
+  //   );
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    // dispatch(getAuctionListings());
 
-	useEffect(() => {
-		dispatch(getAuctionListings());
+    return () => {
+      // dispatch(reset());
+    };
+  }, [dispatch]);
 
-		return () => {
-			dispatch(reset());
-		  };
-	}, [dispatch])
-
-	if (isLoading) {
-		return <Spinner/>
-	}
+  //   if (isLoading) {
+  //     return <Spinner />;
+  //   }
   return (
     <section className="py-6 sm:py-12 bg-gray-800 text-gray-100">
-		<div>
-			<h1>Auction Listings</h1>
-			<ul>
-				{listings && listings.map((listing) => (
-          		<li key={listing.id}>{/* Render your listing data here */}</li>
-        		))}
-      		</ul>
-    	</div>
-	{/* <div className="container p-6 mx-auto space-y-8">
+      <div>
+        <h1>Auction Listings</h1>
+        <ul>
+          {/* {listings &&
+            listings.map((listing) => (
+              <li key={listing.id}></li>
+            ))} */}
+        </ul>
+      </div>
+      {/* <div className="container p-6 mx-auto space-y-8">
 		<div className="space-y-2 text-center">
 			<h2 className="text-3xl font-bold">Partem reprimique an pro</h2>
 			<p className="font-serif text-sm text-gray-400">Qualisque erroribus usu at, duo te agam soluta mucius.</p>
@@ -93,6 +95,6 @@ export default function Dashboard() {
 			</article>
 		</div>
 	</div> */}
-</section>
-  )
+    </section>
+  );
 }
