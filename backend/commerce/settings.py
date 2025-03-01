@@ -67,7 +67,7 @@ ROOT_URLCONF = "commerce.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR/"templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -181,12 +181,14 @@ DJOSER = {
 }
 
 
-EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = 'hennybany@gmail.com'
+EMAIL_HOST = env("EMAIL_HOST")
 EMAIL_USE_TLS = True
-EMAIL_PORT = '2525'
+EMAIL_PORT = env("EMAIL_PORT")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = "info@commerco.com"
+DOMAIN = env("DOMAIN")
+SITE_NAME = "Commerco"
 
 LOGGING = {
     'version': 1,

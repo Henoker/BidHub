@@ -32,8 +32,11 @@ const requestPasswordReset = async (email) => {
 };
 
 // Confirm password reset
-const confirmPasswordReset = async (data) => {
-  const response = await axios.post(`${API_URL}/password_reset/confirm/`, data);
+const confirmPasswordReset = async (token, newPassword) => {
+  const response = await axios.post(`${API_URL}/password_reset/confirm/`, {
+    token,
+    new_password: newPassword,
+  });
   return response.data;
 };
 
