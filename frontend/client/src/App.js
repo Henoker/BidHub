@@ -8,7 +8,6 @@ import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 import NotFoundPage from "./pages/NotFoundPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
-import ActivatePage from "./pages/ActivatePage";
 import ResetPasswordPageConfirm from "./pages/ResetPasswordPageConfirm";
 import Dashboard from "./pages/Dashboard";
 
@@ -22,6 +21,11 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/password-reset" element={<ResetPasswordPage />} />
+          <Route
+            path="/password-reset/:token"
+            element={<ResetPasswordPageConfirm />}
+          />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>

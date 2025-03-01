@@ -57,11 +57,11 @@ export const logout = createAsyncThunk("auth/logout", async () => {
   await authService.logout();
 });
 
-export const requestPasswordReset = createAsyncThunk(
-  "auth/requestPasswordReset",
+export const passwordResetRequest = createAsyncThunk(
+  "auth/passwordResetRequest",
   async (email, thunkAPI) => {
     try {
-      return await authService.requestPasswordReset(email);
+      return await authService.passwordResetRequest(email);
     } catch (error) {
       const message =
         (error.response &&
@@ -74,12 +74,12 @@ export const requestPasswordReset = createAsyncThunk(
   }
 );
 
-// Confirm password reset
-export const confirmPasswordReset = createAsyncThunk(
-  "auth/confirmPasswordReset",
-  async (data, thunkAPI) => {
+// Password reset confirmation
+export const passwordResetConfirm = createAsyncThunk(
+  "auth/passwordResetConfirm",
+  async ({ token, newPassword }, thunkAPI) => {
     try {
-      return await authService.confirmPasswordReset(data);
+      return await authService.passwordResetConfirm(token, newPassword);
     } catch (error) {
       const message =
         (error.response &&
@@ -144,37 +144,33 @@ export const authSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
       })
-      // Request Password Reset
-      .addCase(requestPasswordReset.pending, (state) => {
+      // Password reset request
+      .addCase(passwordResetRequest.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(requestPasswordReset.fulfilled, (state, action) => {
+      .addCase(passwordResetRequest.fulfilled, (state) => {
         state.isLoading = false;
-        state.isSuccess = true;
-        state.isPasswordResetRequested = true;
-        state.message = action.payload.message || "Password reset email sent.";
+        state.resetRequestSuccess = true;
+        state.message = "Password reset email sent successfully.";
       })
-      .addCase(requestPasswordReset.rejected, (state, action) => {
+      .addCase(passwordResetRequest.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-        state.isPasswordResetRequested = false;
       })
-      // Confirm Password Reset
-      .addCase(confirmPasswordReset.pending, (state) => {
+      // Password reset confirmation
+      .addCase(passwordResetConfirm.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(confirmPasswordReset.fulfilled, (state, action) => {
+      .addCase(passwordResetConfirm.fulfilled, (state) => {
         state.isLoading = false;
-        state.isSuccess = true;
-        state.isPasswordResetConfirmed = true;
-        state.message = action.payload.message || "Password reset successful.";
+        state.resetConfirmSuccess = true;
+        state.message = "Password reset successful.";
       })
-      .addCase(confirmPasswordReset.rejected, (state, action) => {
+      .addCase(passwordResetConfirm.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-        state.isPasswordResetConfirmed = false;
       });
   },
 });
