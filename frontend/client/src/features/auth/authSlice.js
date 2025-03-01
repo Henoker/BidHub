@@ -12,6 +12,8 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: "",
+  isPasswordResetRequested: false, // New state for password reset
+  isPasswordResetConfirmed: false,
 };
 
 // Register user
@@ -55,6 +57,41 @@ export const logout = createAsyncThunk("auth/logout", async () => {
   await authService.logout();
 });
 
+export const requestPasswordReset = createAsyncThunk(
+  "auth/requestPasswordReset",
+  async (email, thunkAPI) => {
+    try {
+      return await authService.requestPasswordReset(email);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+// Confirm password reset
+export const confirmPasswordReset = createAsyncThunk(
+  "auth/confirmPasswordReset",
+  async (data, thunkAPI) => {
+    try {
+      return await authService.confirmPasswordReset(data);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 // Auth slice
 export const authSlice = createSlice({
   name: "auth",
@@ -65,6 +102,8 @@ export const authSlice = createSlice({
       state.isSuccess = false;
       state.isError = false;
       state.message = "";
+      state.isPasswordResetRequested = false;
+      state.isPasswordResetConfirmed = false;
     },
   },
   extraReducers: (builder) => {
@@ -104,6 +143,38 @@ export const authSlice = createSlice({
       // Logout
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
+      })
+      // Request Password Reset
+      .addCase(requestPasswordReset.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(requestPasswordReset.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isPasswordResetRequested = true;
+        state.message = action.payload.message || "Password reset email sent.";
+      })
+      .addCase(requestPasswordReset.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        state.isPasswordResetRequested = false;
+      })
+      // Confirm Password Reset
+      .addCase(confirmPasswordReset.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(confirmPasswordReset.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.isPasswordResetConfirmed = true;
+        state.message = action.payload.message || "Password reset successful.";
+      })
+      .addCase(confirmPasswordReset.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        state.isPasswordResetConfirmed = false;
       });
   },
 });

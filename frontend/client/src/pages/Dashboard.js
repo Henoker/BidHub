@@ -7,15 +7,15 @@ export default function Dashboard() {
   //   const { listings, isLoading, isError, isSuccess, message } = useSelector(
   //     (state) => state.listing
   //   );
-  const dispatch = useDispatch();
+//   const dispatch = useDispatch();
 
-  useEffect(() => {
+//   useEffect(() => {
     // dispatch(getAuctionListings());
 
-    return () => {
+    // return () => {
       // dispatch(reset());
-    };
-  }, [dispatch]);
+//     };
+//   }, [dispatch]);
 
   //   if (isLoading) {
   //     return <Spinner />;
