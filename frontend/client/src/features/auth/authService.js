@@ -32,10 +32,10 @@ const requestPasswordReset = async (email) => {
 };
 
 // Confirm password reset
-const confirmPasswordReset = async (token, newPassword) => {
+const confirmPasswordReset = async (token, password) => {
   const response = await axios.post(`${API_URL}/password_reset/confirm/`, {
     token,
-    new_password: newPassword,
+    password,
   });
   return response.data;
 };

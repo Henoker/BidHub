@@ -57,37 +57,25 @@ export const logout = createAsyncThunk("auth/logout", async () => {
   await authService.logout();
 });
 
-export const passwordResetRequest = createAsyncThunk(
-  "auth/passwordResetRequest",
+export const sendPasswordReset = createAsyncThunk(
+  "auth/requestPasswordReset",
   async (email, thunkAPI) => {
     try {
-      return await authService.passwordResetRequest(email);
+      return await authService.requestPasswordReset(email);
     } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
 
 // Password reset confirmation
-export const passwordResetConfirm = createAsyncThunk(
-  "auth/passwordResetConfirm",
-  async ({ token, newPassword }, thunkAPI) => {
+export const resetPasswordConfirm = createAsyncThunk(
+  "auth/resetPasswordConfirm",
+  async ({ token, password }, thunkAPI) => {
     try {
-      return await authService.passwordResetConfirm(token, newPassword);
+      return await authService.confirmPasswordReset(token, password);
     } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(error.response.data);
     }
   }
 );
@@ -145,29 +133,29 @@ export const authSlice = createSlice({
         state.user = null;
       })
       // Password reset request
-      .addCase(passwordResetRequest.pending, (state) => {
+      .addCase(sendPasswordReset.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(passwordResetRequest.fulfilled, (state) => {
+      .addCase(sendPasswordReset.fulfilled, (state) => {
         state.isLoading = false;
         state.resetRequestSuccess = true;
         state.message = "Password reset email sent successfully.";
       })
-      .addCase(passwordResetRequest.rejected, (state, action) => {
+      .addCase(sendPasswordReset.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
       })
       // Password reset confirmation
-      .addCase(passwordResetConfirm.pending, (state) => {
+      .addCase(resetPasswordConfirm.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(passwordResetConfirm.fulfilled, (state) => {
+      .addCase(resetPasswordConfirm.fulfilled, (state) => {
         state.isLoading = false;
         state.resetConfirmSuccess = true;
         state.message = "Password reset successful.";
       })
-      .addCase(passwordResetConfirm.rejected, (state, action) => {
+      .addCase(resetPasswordConfirm.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

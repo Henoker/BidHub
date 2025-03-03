@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../components/Spinner";
-import { passwordResetRequest, reset } from "../features/auth/authSlice";
+import { sendPasswordReset, reset } from "../features/auth/authSlice";
 
 export default function ResetPasswordPage() {
   const [email, setEmail] = useState("");
@@ -29,7 +29,7 @@ export default function ResetPasswordPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(passwordResetRequest(email)); // Dispatch the password reset request action
+    dispatch(sendPasswordReset(email)); // Dispatch the password reset request action
   };
 
   return (
