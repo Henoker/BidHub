@@ -138,7 +138,7 @@ export const authSlice = createSlice({
       })
       .addCase(sendPasswordReset.fulfilled, (state) => {
         state.isLoading = false;
-        state.resetRequestSuccess = true;
+        state.isSuccess = true;
         state.message = "Password reset email sent successfully.";
       })
       .addCase(sendPasswordReset.rejected, (state, action) => {
@@ -152,7 +152,7 @@ export const authSlice = createSlice({
       })
       .addCase(resetPasswordConfirm.fulfilled, (state) => {
         state.isLoading = false;
-        state.resetConfirmSuccess = true;
+        state.isSuccess = true;
         state.message = "Password reset successful.";
       })
       .addCase(resetPasswordConfirm.rejected, (state, action) => {
