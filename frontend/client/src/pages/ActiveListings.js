@@ -34,7 +34,7 @@ export default function ActiveListings() {
         {listings.length > 0 && (
           <a
             rel="noopener noreferrer"
-            href={`/auction/${listings[0].id}`} // Replace with your actual route
+            href={`/listing/${listings[0].id}`} // Replace with your actual route
             className="block max-w-sm gap-3 mx-auto sm:max-w-full group hover:no-underline focus:no-underline lg:grid lg:grid-cols-12 bg-gray-50"
           >
             <img

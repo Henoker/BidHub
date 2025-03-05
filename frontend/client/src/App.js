@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import ActiveListings from "./pages/ActiveListings";
 import CreateNewListings from "./pages/CreateNewListings";
 import Watchlists from "./pages/Watchlists";
+import Listing from "./pages/Listing";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/active-listings" element={<ActiveListings />} />
+          <Route path="/listing/:id" element={<Listing />} />
           <Route path="/create-new-listings" element={<CreateNewListings />} />
           <Route path="/watchlists" element={<Watchlists />} />
           <Route path="/password-reset" element={<ResetPasswordPage />} />
