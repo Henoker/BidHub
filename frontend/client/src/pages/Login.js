@@ -42,7 +42,7 @@ export default function Login() {
     }
 
     if (isSuccess || user) {
-      navigate("/dashboard");
+      navigate("/active-listings");
     }
 
     dispatch(reset());

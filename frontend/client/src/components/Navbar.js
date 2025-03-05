@@ -12,7 +12,7 @@ const Navbar = () => {
   const handleLogout = () => {
     dispatch(logout());
     dispatch(reset());
-    navigate("/");
+    navigate("/login");
   };
 
   return (
@@ -50,10 +50,28 @@ const Navbar = () => {
               <li className="flex">
                 <NavLink
                   rel="noopener noreferrer"
-                  to="/dashboard"
+                  to="/active-listings"
                   className="flex items-center px-4 -mb-1 border-b-2 border-transparent text-indigo-400 border-indigo-400"
                 >
-                  Dashboard
+                  ActiveListings
+                </NavLink>
+              </li>
+              <li className="flex">
+                <NavLink
+                  rel="noopener noreferrer"
+                  to="/create-new-listings"
+                  className="flex items-center px-4 -mb-1 border-b-2 border-transparent text-indigo-400 border-indigo-400"
+                >
+                  Create New Listing
+                </NavLink>
+              </li>
+              <li className="flex">
+                <NavLink
+                  rel="noopener noreferrer"
+                  to="/watchlists"
+                  className="flex items-center px-4 -mb-1 border-b-2 border-transparent text-indigo-400 border-indigo-400"
+                >
+                  Watchlists
                 </NavLink>
               </li>
               <li className="flex">

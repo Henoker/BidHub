@@ -10,6 +10,9 @@ import NotFoundPage from "./pages/NotFoundPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ResetPasswordPageConfirm from "./pages/ResetPasswordPageConfirm";
 import Dashboard from "./pages/Dashboard";
+import ActiveListings from "./pages/ActiveListings";
+import CreateNewListings from "./pages/CreateNewListings";
+import Watchlists from "./pages/Watchlists";
 
 const App = () => {
   return (
@@ -21,6 +24,9 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/active-listings" element={<ActiveListings />} />
+          <Route path="/create-new-listings" element={<CreateNewListings />} />
+          <Route path="/watchlists" element={<Watchlists />} />
           <Route path="/password-reset" element={<ResetPasswordPage />} />
           <Route
             path="/password-reset/:token"
