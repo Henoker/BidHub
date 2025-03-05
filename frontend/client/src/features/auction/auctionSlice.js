@@ -1,6 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import auctionAPIService from './auctionAPIService';
-
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import auctionAPIService from "./auctionAPIService";
 
 const initialState = {
   listings: [],
@@ -8,51 +7,54 @@ const initialState = {
   isError: false,
   isLoading: false,
   isSuccess: false,
-  message: ''
-
-}
+  message: "",
+};
 
 // Get all active auction listings
+export const getAuctionListings = createAsyncThunk(
+  "auction/listing",
+  async (_, thunkAPI) => {
+    try {
+      const response = await auctionAPIService.getAuctionListings();
+      console.log("API Response:", response);
+      return response; // Ensure this is the array of listings
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
 
-export const getAuctionListings = createAsyncThunk('auction/auctionlistings',
-async (_, thunkAPI) => {
-  try {
-    const response = await auctionAPIService.getAuctionListings();
-    console.log('API Response:', response);
-    return response;
-  } catch (error) {
-    const message = (error.response && error.response.data && error.data.message) || error.message || error.toString();
-
-    return thunkAPI.rejectWithValue(message);
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-
-}
-)
+);
 
 export const ActiveListingsSlice = createSlice({
-  name: 'listing',
+  name: "listing",
   initialState,
   reducers: {
-    reset: (state) => initialState
+    reset: (state) => initialState,
   },
   extraReducers: (builder) => {
     builder
       .addCase(getAuctionListings.pending, (state) => {
-        state.isLoading = true
+        state.isLoading = true;
       })
       .addCase(getAuctionListings.fulfilled, (state, action) => {
         state.isSuccess = true;
-        state.isLoading = false
+        state.isLoading = false;
         state.listings = Array.isArray(action.payload) ? action.payload : [];
       })
       .addCase(getAuctionListings.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.message = action.payload
-      })
+        state.message = action.payload;
+      });
   },
 });
 
-export const { reset} = ActiveListingsSlice.actions;
+export const { reset } = ActiveListingsSlice.actions;
 
 export default ActiveListingsSlice.reducer;

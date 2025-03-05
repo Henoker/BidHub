@@ -1,11 +1,20 @@
-import axios from 'axios';
+import axios from "axios";
 
-//Get Auction listings
+const API_URL = "http://localhost:8000/api/v1/listing/";
+
+// Get all auction listings
 const getAuctionListings = async () => {
-    const response = await axios.get("/api/v1/");
-    return response.data
-} 
+  try {
+    const response = await axios.get(API_URL);
+    return response.data; // Return the data from the response
+  } catch (error) {
+    console.error("Error fetching auction listings:", error);
+    throw error;
+  }
+};
 
-const auctionAPIService = getAuctionListings()
+const auctionAPIService = {
+  getAuctionListings,
+};
 
-export default auctionAPIService
+export default auctionAPIService;
