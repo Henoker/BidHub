@@ -13,8 +13,19 @@ const getAuctionListings = async () => {
   }
 };
 
+const getListingById = async (listingId) => {
+  try {
+    const response = await axios.get(`${API_URL}/${listingId}/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching listing:", error);
+    throw error;
+  }
+};
+
 const auctionAPIService = {
   getAuctionListings,
+  getListingById,
 };
 
 export default auctionAPIService;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login, logout, reset } from "../features/auth/authSlice";
+import { login, reset } from "../features/auth/authSlice";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 
@@ -16,8 +16,9 @@ export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { user, userInfo, isLoading, isError, isSuccess, message } =
-    useSelector((state) => state.auth);
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -45,9 +46,15 @@ export default function Login() {
       navigate("/active-listings");
     }
 
-    dispatch(reset());
-    // dispatch(userInfo());
-  }, [isError, isSuccess, user, navigate, dispatch, message]);
+    // Reset the state only if isSuccess or isError is true
+    if (isSuccess || isError) {
+      dispatch(reset());
+    }
+  }, [isError, isSuccess, user, navigate, dispatch]);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="bg-gray-900">
@@ -87,7 +94,6 @@ export default function Login() {
               </p>
             </div>
             <div className="mt-8">
-              {isLoading && <Spinner />}
               <form onSubmit={handleSubmit}>
                 <div>
                   <label

@@ -104,29 +104,32 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.user = action.payload;
-        state.userInfo = action.payload.user;
+        state.userInfo = action.payload;
       })
       .addCase(register.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         state.user = null;
+        state.userInfo = null;
       })
       // Login
       .addCase(login.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(login.fulfilled, (state, action) => {
+        console.log("Login Payload:", action.payload);
         state.isLoading = false;
         state.isSuccess = true;
         state.user = action.payload;
-        state.userInfo = action.payload.user;
+        state.userInfo = action.payload;
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         state.user = null;
+        state.userInfo = null;
       })
       // Logout
       .addCase(logout.fulfilled, (state) => {

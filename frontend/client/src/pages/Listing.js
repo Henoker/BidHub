@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getAuctionListings, reset } from "../features/auction/auctionSlice";
+import { fetchListingById, reset } from "../features/auction/auctionSlice";
 import Spinner from "../components/Spinner";
 
 export default function Listing() {
@@ -13,7 +13,7 @@ export default function Listing() {
 
   useEffect(() => {
     // Fetch auction listing when the component mounts
-    dispatch(getAuctionListings(listingId));
+    dispatch(fetchListingById(listingId));
 
     // Cleanup function to reset the state when the component unmounts
     return () => {

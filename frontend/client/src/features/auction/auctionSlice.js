@@ -31,6 +31,14 @@ export const getAuctionListings = createAsyncThunk(
   }
 );
 
+export const fetchListingById = createAsyncThunk(
+  "auction/fetchListingById",
+  async (listingId) => {
+    const response = await auctionAPIService.getListingById(listingId);
+    return response;
+  }
+);
+
 export const ActiveListingsSlice = createSlice({
   name: "listing",
   initialState,
@@ -51,6 +59,16 @@ export const ActiveListingsSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(fetchListingById.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchListingById.fulfilled, (state, action) => {
+        state.currentListing = action.payload;
+      })
+      .addCase(fetchListingById.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
       });
   },
 });
