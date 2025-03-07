@@ -123,6 +123,7 @@ export const authSlice = createSlice({
         state.isSuccess = true;
         state.user = action.payload;
         state.userInfo = action.payload;
+        localStorage.setItem("user", JSON.stringify(action.payload));
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -134,6 +135,7 @@ export const authSlice = createSlice({
       // Logout
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
+        localStorage.removeItem("user");
       })
       // Password reset request
       .addCase(sendPasswordReset.pending, (state) => {
