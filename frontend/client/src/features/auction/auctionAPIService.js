@@ -6,16 +6,18 @@ const API_URL = "http://localhost:8000/api/v1/listing/";
 const getAuctionListings = async () => {
   try {
     const response = await axios.get(API_URL);
-    return response.data; // Return the data from the response
+    return response.data;
   } catch (error) {
     console.error("Error fetching auction listings:", error);
     throw error;
   }
 };
 
+// Get a single listing by ID
 const getListingById = async (listingId) => {
   try {
-    const response = await axios.get(`${API_URL}/${listingId}/`);
+    const response = await axios.get(`${API_URL}${listingId}/`); // Ensure no extra `/`
+    console.log("API Response for Single Listing:", response.data); // Debugging
     return response.data;
   } catch (error) {
     console.error("Error fetching listing:", error);

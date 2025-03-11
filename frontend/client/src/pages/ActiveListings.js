@@ -19,6 +19,10 @@ export default function ActiveListings() {
     };
   }, [dispatch]);
 
+  useEffect(() => {
+    console.log("Fetched Listing:", listings);
+  }, [listings]);
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -49,7 +53,7 @@ export default function ActiveListings() {
                 {listings[0].name_of_item}
               </h3>
               <span className="text-xs text-gray-600">
-                Listed by: {listings[0].owner.username}
+                Listed by: {listings.owner?.username || "Unknown"}
               </span>
               <p>{listings[0].description}</p>
               <p className="font-semibold">
@@ -65,7 +69,7 @@ export default function ActiveListings() {
             <a
               key={listing.id}
               rel="noopener noreferrer"
-              href={`/auction/${listing.id}`} // Replace with your actual route
+              href={`/listing/${listing.id}`} // Replace with your actual route
               className="max-w-sm mx-auto group hover:no-underline focus:no-underline bg-gray-50"
             >
               <img

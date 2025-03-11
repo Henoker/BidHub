@@ -3,7 +3,7 @@ import auctionAPIService from "./auctionAPIService";
 
 const initialState = {
   listings: [],
-  listing: {},
+  listing: {}, // Single listing data
   isError: false,
   isLoading: false,
   isSuccess: false,
@@ -31,11 +31,23 @@ export const getAuctionListings = createAsyncThunk(
   }
 );
 
+// Fetch a single listing by ID
 export const fetchListingById = createAsyncThunk(
   "auction/fetchListingById",
-  async (listingId) => {
-    const response = await auctionAPIService.getListingById(listingId);
-    return response;
+  async (listingId, thunkAPI) => {
+    try {
+      const response = await auctionAPIService.getListingById(listingId);
+      return response;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return thunkAPI.rejectWithValue(message);
+    }
   }
 );
 
@@ -47,6 +59,7 @@ export const ActiveListingsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Handle getAuctionListings
       .addCase(getAuctionListings.pending, (state) => {
         state.isLoading = true;
       })
@@ -60,15 +73,20 @@ export const ActiveListingsSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
+
+      // Handle fetchListingById
       .addCase(fetchListingById.pending, (state) => {
         state.isLoading = true;
       })
       .addCase(fetchListingById.fulfilled, (state, action) => {
-        state.currentListing = action.payload;
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.listing = action.payload; // Assign to `listing`
       })
-      .addCase(fetchListingById.rejected, (state) => {
+      .addCase(fetchListingById.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
+        state.message = action.payload; // Set the error message
       });
   },
 });

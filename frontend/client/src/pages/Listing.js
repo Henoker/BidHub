@@ -6,37 +6,39 @@ import Spinner from "../components/Spinner";
 
 export default function Listing() {
   const dispatch = useDispatch();
-  const { listingId } = useParams();
+  const { id: listingId } = useParams(); // Extract `listingId` from the URL
   const { listing, isLoading, isError, message } = useSelector(
     (state) => state.listing
   );
 
   useEffect(() => {
-    // Fetch auction listing when the component mounts
+    console.log("Listing ID:", listingId); // Debugging
     dispatch(fetchListingById(listingId));
 
-    // Cleanup function to reset the state when the component unmounts
     return () => {
       dispatch(reset());
     };
   }, [dispatch, listingId]);
+
+  useEffect(() => {
+    console.log("Fetched Listing:", listing); // Debugging
+  }, [listing]);
 
   if (isLoading) {
     return <Spinner />;
   }
 
   if (isError) {
-    return <div>Error: {message}</div>;
+    return <div>Error: {message || "Failed to fetch listing."}</div>;
   }
 
-  if (!listing) {
-    return <div>Listing not found.</div>;
+  if (!listing || Object.keys(listing).length === 0) {
+    return <div>Loading...</div>;
   }
 
   return (
     <section className="bg-gray-100 text-gray-800">
       <div className="container max-w-6xl p-6 mx-auto space-y-6 sm:space-y-12">
-        {/* Featured Auction Listing */}
         <div className="block max-w-sm gap-3 mx-auto sm:max-w-full group hover:no-underline focus:no-underline lg:grid lg:grid-cols-12 bg-gray-50">
           <img
             src={listing.url || "https://source.unsplash.com/random/480x360"}
@@ -48,10 +50,12 @@ export default function Listing() {
               {listing.name_of_item}
             </h3>
             <span className="text-xs text-gray-600">
-              Listed by: {listing.owner.username}
+              Listed by: {listing.owner?.username || "Unknown"}
             </span>
             <p>{listing.description}</p>
-            <p className="font-semibold">Current Bid: ${listing.bid.bid}</p>
+            <p className="font-semibold">
+              Current Bid: ${listing.bid?.bid || "N/A"}
+            </p>
           </div>
         </div>
       </div>
