@@ -46,9 +46,43 @@ const getListingById = async (listingId) => {
   }
 };
 
+// Delete a listing by ID
+const deleteListing = async (listingId) => {
+  try {
+    const token = getToken();
+    const response = await axiosInstance.delete(`${listingId}/`, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting listing:", error);
+    throw error;
+  }
+};
+
+// Create a new listing
+const createListing = async (listingData) => {
+  try {
+    const token = getToken();
+    const response = await axiosInstance.post("/create-listing/", listingData, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error creating listing:", error);
+    throw error;
+  }
+};
+
 const auctionAPIService = {
   getAuctionListings,
   getListingById,
+  deleteListing,
+  createListing,
 };
 
 export default auctionAPIService;
