@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8000/api/v1/listing/";
+// Set the base URL to the root of your API
+const API_URL = "http://localhost:8000/api/v1/";
 
 // Create an Axios instance with default headers
 const axiosInstance = axios.create({
@@ -17,7 +18,8 @@ const getToken = () => {
 const getAuctionListings = async () => {
   try {
     const token = getToken();
-    const response = await axiosInstance.get("/", {
+    const response = await axiosInstance.get("listing/", {
+      // Use the correct endpoint
       headers: {
         Authorization: `Token ${token}`,
       },
@@ -33,7 +35,8 @@ const getAuctionListings = async () => {
 const getListingById = async (listingId) => {
   try {
     const token = getToken();
-    const response = await axiosInstance.get(`${listingId}/`, {
+    const response = await axiosInstance.get(`listing/${listingId}/`, {
+      // Use the correct endpoint
       headers: {
         Authorization: `Token ${token}`,
       },
@@ -50,7 +53,8 @@ const getListingById = async (listingId) => {
 const deleteListing = async (listingId) => {
   try {
     const token = getToken();
-    const response = await axiosInstance.delete(`${listingId}/`, {
+    const response = await axiosInstance.delete(`listing/${listingId}/`, {
+      // Use the correct endpoint
       headers: {
         Authorization: `Token ${token}`,
       },
@@ -66,9 +70,11 @@ const deleteListing = async (listingId) => {
 const createListing = async (listingData) => {
   try {
     const token = getToken();
-    const response = await axiosInstance.post("/create-listing/", listingData, {
+    const response = await axiosInstance.post("create-listing/", listingData, {
+      // Use the correct endpoint
       headers: {
         Authorization: `Token ${token}`,
+        "Content-Type": "application/json", // Ensure the content type is JSON
       },
     });
     return response.data;
