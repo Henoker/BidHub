@@ -8,6 +8,8 @@ from .models import AuctionListings, Bid, Comments
 from .serializers import AuctionListingsSerializer, BidSerializer, CommentsSerializer
 from django.contrib.auth import get_user_model
 from knox.auth import TokenAuthentication
+from django.shortcuts import get_object_or_404
+
 
 User = get_user_model()
 
@@ -45,7 +47,7 @@ class DisplayListingView(APIView):
     authentication_classes = [TokenAuthentication]
 
     def get(self, request, listing_id):
-        listing = AuctionListings.objects.get(pk=listing_id)
+        listing = get_object_or_404(AuctionListings, pk=listing_id)
         comments = listing.comments.all()
         is_owner = request.user == listing.owner
         is_listing_in_watchlist = request.user in listing.watchlist.all()
@@ -57,6 +59,33 @@ class DisplayListingView(APIView):
             "is_owner": is_owner,
             "is_listing_in_watchlist": is_listing_in_watchlist
         })
+
+    def put(self, request, listing_id):
+        """Fully update a listing (all fields required)."""
+        listing = get_object_or_404(AuctionListings, pk=listing_id)
+
+        if request.user != listing.owner:
+            return Response({"error": "You do not have permission to update this listing."}, status=status.HTTP_403_FORBIDDEN)
+
+        serializer = AuctionListingsSerializer(listing, data=request.data)
+        if serializer.is_valid():
+            serializer.save()  # Save the updated data to the database
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, listing_id):
+        """Partially update a listing (some fields can be omitted)."""
+        listing = get_object_or_404(AuctionListings, pk=listing_id)
+
+        if request.user != listing.owner:
+            return Response({"error": "You do not have permission to update this listing."}, status=status.HTTP_403_FORBIDDEN)
+
+        serializer = AuctionListingsSerializer(
+            listing, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()  # Save only the updated fields
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class WatchlistView(APIView):
@@ -145,3 +174,35 @@ class IndexView(APIView):
         active_listings = AuctionListings.objects.filter(is_closed=False)
         serializer = AuctionListingsSerializer(active_listings, many=True)
         return Response(serializer.data)
+
+
+class UpdateListingView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication]
+
+    def put(self, request, listing_id):
+        """Fully update a listing (all fields required)."""
+        listing = get_object_or_404(AuctionListings, pk=listing_id)
+
+        if request.user != listing.owner:
+            return Response({"error": "You do not have permission to update this listing."}, status=status.HTTP_403_FORBIDDEN)
+
+        serializer = AuctionListingsSerializer(listing, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def patch(self, request, listing_id):
+        """Partially update a listing (some fields can be omitted)."""
+        listing = get_object_or_404(AuctionListings, pk=listing_id)
+
+        if request.user != listing.owner:
+            return Response({"error": "You do not have permission to update this listing."}, status=status.HTTP_403_FORBIDDEN)
+
+        serializer = AuctionListingsSerializer(
+            listing, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
