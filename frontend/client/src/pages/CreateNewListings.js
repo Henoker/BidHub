@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
-import { createListing } from "../features/auction/auctionSlice";
+import {
+  createListing,
+  updateListing,
+  fetchListingById,
+} from "../features/auction/auctionSlice";
+import { useParams, useNavigate } from "react-router-dom";
 
 export default function CreateNewListings() {
   const [formData, setFormData] = useState({
@@ -16,7 +21,27 @@ export default function CreateNewListings() {
   const { name_of_item, category, bid, image_url, description } = formData;
 
   const dispatch = useDispatch();
-  const { isLoading, isError, message } = useSelector((state) => state.listing);
+  const { isLoading, isError, message, listing } = useSelector(
+    (state) => state.listing
+  );
+
+  const { listingId } = useParams(); // Get the listing ID from the URL if in edit mode
+  const navigate = useNavigate();
+  const isEditMode = Boolean(listingId); // Check if the component is in edit mode
+
+  // Fetch listing data if in edit mode
+  useEffect(() => {
+    if (isEditMode) {
+      dispatch(fetchListingById(listingId))
+        .unwrap()
+        .then((data) => {
+          setFormData(data); // Populate the form with the fetched listing data
+        })
+        .catch((error) => {
+          toast.error("Failed to fetch listing data");
+        });
+    }
+  }, [listingId, dispatch, isEditMode]);
 
   // Handle input change
   const handleInputChange = (e) => {
@@ -36,25 +61,37 @@ export default function CreateNewListings() {
       return;
     }
 
-    console.log("Form Data:", formData); // Debugging log
-
-    // Dispatch the createListing action
-    dispatch(createListing(formData))
-      .unwrap()
-      .then(() => {
-        toast.success("Listing created successfully!");
-        setFormData({
-          name_of_item: "",
-          category: "",
-          bid: "",
-          image_url: "",
-          description: "",
+    if (isEditMode) {
+      // Dispatch the updateListing action
+      dispatch(updateListing({ listingId, listingData: formData }))
+        .unwrap()
+        .then(() => {
+          toast.success("Listing updated successfully!");
+          navigate("/listings"); // Redirect to the listings page
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error(error || "Failed to update listing");
         });
-      })
-      .catch((error) => {
-        console.error("Error:", error); // Debugging log
-        toast.error(error || "Failed to create listing");
-      });
+    } else {
+      // Dispatch the createListing action
+      dispatch(createListing(formData))
+        .unwrap()
+        .then(() => {
+          toast.success("Listing created successfully!");
+          setFormData({
+            name_of_item: "",
+            category: "",
+            bid: "",
+            image_url: "",
+            description: "",
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          toast.error(error || "Failed to create listing");
+        });
+    }
   };
 
   if (isLoading) {
@@ -69,7 +106,7 @@ export default function CreateNewListings() {
         className="container w-full max-w-xl p-8 mx-auto space-y-6 rounded-md shadow bg-gray-50"
       >
         <h2 className="w-full text-3xl font-bold leading-tight">
-          Create New Listing
+          {isEditMode ? "Edit Listing" : "Create New Listing"}
         </h2>
         <div>
           <label htmlFor="name_of_item" className="block mb-1 ml-1">
@@ -150,7 +187,13 @@ export default function CreateNewListings() {
             type="submit"
             className="w-full px-4 py-2 font-bold rounded shadow focus:outline-none focus:ring hover:ring focus:ring-opacity-50 bg-violet-600 focus:ring-violet-600 hover:ring-violet-600 text-gray-50"
           >
-            {isLoading ? "Creating..." : "Create Listing"}
+            {isLoading
+              ? isEditMode
+                ? "Updating..."
+                : "Creating..."
+              : isEditMode
+              ? "Update Listing"
+              : "Create Listing"}
           </button>
         </div>
       </form>

@@ -174,35 +174,3 @@ class IndexView(APIView):
         active_listings = AuctionListings.objects.filter(is_closed=False)
         serializer = AuctionListingsSerializer(active_listings, many=True)
         return Response(serializer.data)
-
-
-class UpdateListingView(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
-
-    def put(self, request, listing_id):
-        """Fully update a listing (all fields required)."""
-        listing = get_object_or_404(AuctionListings, pk=listing_id)
-
-        if request.user != listing.owner:
-            return Response({"error": "You do not have permission to update this listing."}, status=status.HTTP_403_FORBIDDEN)
-
-        serializer = AuctionListingsSerializer(listing, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def patch(self, request, listing_id):
-        """Partially update a listing (some fields can be omitted)."""
-        listing = get_object_or_404(AuctionListings, pk=listing_id)
-
-        if request.user != listing.owner:
-            return Response({"error": "You do not have permission to update this listing."}, status=status.HTTP_403_FORBIDDEN)
-
-        serializer = AuctionListingsSerializer(
-            listing, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

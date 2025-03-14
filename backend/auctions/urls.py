@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     CreateListingView, DisplayListingView, WatchlistView, CloseAuctionView,
-    AddCommentView, WatchlistListView, CategoryView, NewBidView, IndexView, UpdateListingView
+    AddCommentView, WatchlistListView, CategoryView, NewBidView, IndexView,
 )
 
 urlpatterns = [
@@ -18,7 +18,5 @@ urlpatterns = [
     path('category/', CategoryView.as_view(), name='category'),
     path('new-bid/<int:listing_id>/', NewBidView.as_view(), name='new-bid'),
     path('listing/', IndexView.as_view(), name='index'),
-    path('update-listing/<int:listing_id>/',
-         UpdateListingView.as_view(), name='update-listing'),
 
 ]

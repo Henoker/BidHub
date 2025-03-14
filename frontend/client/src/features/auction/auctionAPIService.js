@@ -84,11 +84,33 @@ const createListing = async (listingData) => {
   }
 };
 
+// Update a listing by ID
+const updateListing = async ({ listingId, listingData }) => {
+  try {
+    const token = getToken();
+    const response = await axiosInstance.put(
+      `listing/${listingId}/`,
+      listingData,
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating listing:", error);
+    throw error;
+  }
+};
+
 const auctionAPIService = {
   getAuctionListings,
   getListingById,
   deleteListing,
   createListing,
+  updateListing,
 };
 
 export default auctionAPIService;

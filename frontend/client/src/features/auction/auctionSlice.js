@@ -88,6 +88,28 @@ export const createListing = createAsyncThunk(
   }
 );
 
+// Update a listing by ID
+export const updateListing = createAsyncThunk(
+  "auction/updateListing",
+  async ({ listingId, listingData }, thunkAPI) => {
+    try {
+      const response = await auctionAPIService.updateListing({
+        listingId,
+        listingData,
+      });
+      return response;
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const ActiveListingsSlice = createSlice({
   name: "listing",
   initialState,
@@ -152,6 +174,23 @@ export const ActiveListingsSlice = createSlice({
         state.listings.push(action.payload); // Add the new listing to the listings array
       })
       .addCase(createListing.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      // Handle updateListing
+      .addCase(updateListing.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateListing.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        // Update the listing in the listings array
+        state.listings = state.listings.map((listing) =>
+          listing.id === action.payload.id ? action.payload : listing
+        );
+      })
+      .addCase(updateListing.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
