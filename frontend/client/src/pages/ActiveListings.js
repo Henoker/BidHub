@@ -53,7 +53,7 @@ export default function ActiveListings() {
                 {listings[0].name_of_item}
               </h3>
               <span className="text-xs text-gray-600">
-                Listed by: {listings.owner?.username || "Unknown"}
+                Listed by: {listings[0].owner?.username || "Unknown"}
               </span>
               <p>{listings[0].description}</p>
               <p className="font-semibold">

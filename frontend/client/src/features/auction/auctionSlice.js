@@ -140,7 +140,7 @@ export const ActiveListingsSlice = createSlice({
       .addCase(fetchListingById.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.listing = action.payload; // Assign to `listing`
+        state.listing = action.payload.listing || action.payload; // Assign to `listing`
       })
       .addCase(fetchListingById.rejected, (state, action) => {
         state.isLoading = false;

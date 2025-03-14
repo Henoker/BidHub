@@ -10,6 +10,8 @@ export default function Listing() {
   const { listing, isLoading, isError, message } = useSelector(
     (state) => state.listing
   );
+  const state = useSelector((state) => state);
+  console.log("Redux state:", state);
 
   useEffect(() => {
     console.log("Listing ID:", listingId); // Debugging
@@ -50,7 +52,7 @@ export default function Listing() {
               {listing.name_of_item}
             </h3>
             <span className="text-xs text-gray-600">
-              Listed by: {listing.owner.username || "Unknown"}
+              {/* Listed by: {listing.owner.username || "Unknown"} */}
             </span>
             <p>{listing.description}</p>
             <p className="font-semibold">
