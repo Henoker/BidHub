@@ -1,17 +1,21 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { fetchListingById, reset } from "../features/auction/auctionSlice";
+import { user } from "../features/auth/authSlice";
 import Spinner from "../components/Spinner";
 
 export default function Listing() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id: listingId } = useParams(); // Extract `listingId` from the URL
   const { listing, isLoading, isError, message } = useSelector(
     (state) => state.listing
   );
   const state = useSelector((state) => state);
   console.log("Redux state:", state);
+  const { user } = useSelector((state) => state.auth);
+  console.log("User:", user);
 
   useEffect(() => {
     console.log("Listing ID:", listingId); // Debugging
@@ -38,6 +42,19 @@ export default function Listing() {
     return <div>Loading...</div>;
   }
 
+  const isOwner = user && listing.owner && user._id === listing.owner._id;
+
+  const handleEdit = () => {
+    navigate(`/create-listing/${listingId}`); // Redirect to the CreateListing component with the listing ID
+  };
+
+  // Handle delete button click
+  const handleDelete = () => {
+    // Implement delete functionality here
+    console.log("Delete listing:", listingId);
+    // You can dispatch a delete action here
+  };
+
   return (
     <section className="bg-gray-100 text-gray-800">
       <div className="container max-w-6xl p-6 mx-auto space-y-6 sm:space-y-12">
@@ -52,12 +69,29 @@ export default function Listing() {
               {listing.name_of_item}
             </h3>
             <span className="text-xs text-gray-600">
-              {/* Listed by: {listing.owner.username || "Unknown"} */}
+              Listed by: {listing.owner.username || "Unknown"}
             </span>
             <p>{listing.description}</p>
             <p className="font-semibold">
               Current Bid: ${listing.bid?.bid || "N/A"}
             </p>
+            {/* Conditionally render Edit and Delete buttons */}
+            {isOwner && (
+              <div className="flex space-x-4 mt-4">
+                <button
+                  onClick={handleEdit}
+                  className="px-4 py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="px-4 py-2 font-semibold text-white bg-red-600 rounded-md hover:bg-red-700"
+                >
+                  Delete
+                </button>
+              </div>
+            )}
           </div>
         </div>
         <div className="container flex flex-col w-full max-w-lg p-6 mx-auto divide-y rounded-md divide-gray-300 bg-gray-50 text-gray-800">
@@ -103,81 +137,6 @@ export default function Listing() {
               <h2 className="text-3xl font-semibold text-center">
                 Leave Your Comments!
               </h2>
-              {/* <div className="flex flex-col items-center py-6 space-y-3">
-                <span className="text-center">How was your experience?</span>
-                <div className="flex space-x-3">
-                  <button
-                    type="button"
-                    title="Rate 1 stars"
-                    aria-label="Rate 1 stars"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className="w-10 h-10 text-yellow-700"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                    </svg>
-                  </button>
-                  <button
-                    type="button"
-                    title="Rate 2 stars"
-                    aria-label="Rate 2 stars"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className="w-10 h-10 text-yellow-700"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                    </svg>
-                  </button>
-                  <button
-                    type="button"
-                    title="Rate 3 stars"
-                    aria-label="Rate 3 stars"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className="w-10 h-10 text-yellow-700"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                    </svg>
-                  </button>
-                  <button
-                    type="button"
-                    title="Rate 4 stars"
-                    aria-label="Rate 4 stars"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className="w-10 h-10 text-yellow-700"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                    </svg>
-                  </button>
-                  <button
-                    type="button"
-                    title="Rate 5 stars"
-                    aria-label="Rate 5 stars"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className="w-10 h-10 text-gray-400"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                    </svg>
-                  </button>
-                </div>
-              </div> */}
               <div className="flex flex-col w-full">
                 <textarea
                   rows="3"
