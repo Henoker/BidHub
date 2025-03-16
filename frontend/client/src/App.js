@@ -15,6 +15,7 @@ import CreateNewListings from "./pages/CreateNewListings";
 import Watchlists from "./pages/Watchlists";
 import Listing from "./pages/Listing";
 import ProtectedRoute from "./components/ProtectedRoute";
+import EditListing from "./pages/EditListing";
 
 const App = () => {
   return (
@@ -40,6 +41,7 @@ const App = () => {
               path="/create-new-listings"
               element={<CreateNewListings />}
             />
+            <Route path="/edit-listing/:id" element={<EditListing />} />
             <Route path="/watchlists" element={<Watchlists />} />
           </Route>
 

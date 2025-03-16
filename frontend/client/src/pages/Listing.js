@@ -45,7 +45,7 @@ export default function Listing() {
   const isOwner = user && listing.owner && user._id === listing.owner._id;
 
   const handleEdit = () => {
-    navigate(`/create-listing/${listingId}`); // Redirect to the CreateListing component with the listing ID
+    navigate(`/edit-listing/${listingId}`); // Redirect to the EditListing component
   };
 
   // Handle delete button click
