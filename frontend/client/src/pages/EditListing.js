@@ -20,7 +20,7 @@ export default function EditListing() {
   const { name_of_item, category, bid, image_url, description } = formData;
 
   const dispatch = useDispatch();
-  const { listingId } = useParams(); // Get the listing ID from the URL
+  const { id: listingId } = useParams(); // Get the listing ID from the URL
   const navigate = useNavigate();
   const { isLoading, listing } = useSelector((state) => state.listing);
 
@@ -99,8 +99,65 @@ export default function EditListing() {
         <h2 className="w-full text-3xl font-bold leading-tight">
           Edit Listing
         </h2>
-        {/* Form fields (same as CreateListing.js) */}
-        {/* ... */}
+        <div>
+          <label htmlFor="name_of_item" className="block mb-1 ml-1">
+            Name of Item
+          </label>
+          <input
+            id="name_of_item"
+            type="text"
+            name="name_of_item"
+            placeholder="Name of item"
+            value={name_of_item}
+            onChange={handleInputChange}
+            required=""
+            className="block w-full p-2 rounded focus:outline-none focus:ring focus:ring-opacity-25 focus:ring-violet-600 bg-gray-100"
+          />
+        </div>
+        <div>
+          <label htmlFor="category" className="block mb-1 ml-1">
+            Category
+          </label>
+          <input
+            id="category"
+            type="text"
+            name="category"
+            placeholder="Category"
+            value={category}
+            onChange={handleInputChange}
+            required=""
+            className="block w-full p-2 rounded focus:outline-none focus:ring focus:ring-opacity-25 focus:ring-violet-600 bg-gray-100"
+          />
+        </div>
+        <div>
+          <label htmlFor="image_url" className="block mb-1 ml-1">
+            Image URL
+          </label>
+          <input
+            id="image_url"
+            type="url"
+            name="image_url"
+            placeholder="Image URL"
+            value={image_url}
+            onChange={handleInputChange}
+            required=""
+            className="block w-full p-2 rounded focus:outline-none focus:ring focus:ring-opacity-25 focus:ring-violet-600 bg-gray-100"
+          />
+        </div>
+        <div>
+          <label htmlFor="description" className="block mb-1 ml-1">
+            Description
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Description..."
+            value={description}
+            onChange={handleInputChange}
+            required=""
+            className="block w-full p-2 rounded autoexpand focus:outline-none focus:ring focus:ring-opacity-25 focus:ring-violet-600 bg-gray-100"
+          ></textarea>
+        </div>
         <div>
           <button
             type="submit"
