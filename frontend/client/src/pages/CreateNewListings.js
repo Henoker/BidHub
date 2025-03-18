@@ -44,7 +44,7 @@ export default function CreateListing() {
       category,
       bid,
       description,
-      url: image_url,
+      image_url,
     };
 
     // Dispatch the createListing action

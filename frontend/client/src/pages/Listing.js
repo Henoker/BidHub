@@ -12,23 +12,26 @@ export default function Listing() {
   const { listing, isLoading, isError, message } = useSelector(
     (state) => state.listing
   );
-  const state = useSelector((state) => state);
-  console.log("Redux state:", state);
-  const { user } = useSelector((state) => state.auth);
-  console.log("User:", user);
+  const { user } = useSelector((state) => state.auth); // Get the signed-in user
 
+  // Debugging: Log the listing owner and signed-in user
   useEffect(() => {
-    console.log("Listing ID:", listingId); // Debugging
+    if (listing) {
+      console.log("Listing Owner:", listing.owner);
+    }
+    if (user) {
+      console.log("Signed-in User:", user);
+    }
+  }, [listing, user]);
+
+  // Fetch listing data when the component mounts
+  useEffect(() => {
     dispatch(fetchListingById(listingId));
 
     return () => {
       dispatch(reset());
     };
   }, [dispatch, listingId]);
-
-  useEffect(() => {
-    console.log("Fetched Listing:", listing); // Debugging
-  }, [listing]);
 
   if (isLoading) {
     return <Spinner />;
@@ -42,13 +45,13 @@ export default function Listing() {
     return <div>Loading...</div>;
   }
 
-  const isOwner = user && listing.owner && user._id === listing.owner._id;
+  // Check if the signed-in user is the owner of the listing
+  const isOwner = user && listing.owner && user.user.id === listing.owner.id;
 
   const handleEdit = () => {
     navigate(`/edit-listing/${listingId}`); // Redirect to the EditListing component
   };
 
-  // Handle delete button click
   const handleDelete = () => {
     // Implement delete functionality here
     console.log("Delete listing:", listingId);
@@ -75,8 +78,11 @@ export default function Listing() {
             <p className="font-semibold">
               Current Bid: ${listing.bid?.bid || "N/A"}
             </p>
-            {/* Conditionally render Edit and Delete buttons */}
-            {isOwner && (
+            {/* Conditionally render buttons based on ownership */}
+            {/* Conditionally render buttons based on ownership */}
+            {/* Conditionally render buttons based on ownership */}
+            {isOwner ? (
+              // Show Edit and Delete buttons for the owner
               <div className="flex space-x-4 mt-4">
                 <button
                   onClick={handleEdit}
@@ -89,6 +95,22 @@ export default function Listing() {
                   className="px-4 py-2 font-semibold text-white bg-red-600 rounded-md hover:bg-red-700"
                 >
                   Delete
+                </button>
+              </div>
+            ) : (
+              // Show Bid and Add to Watchlist buttons for non-owners
+              <div className="flex space-x-4 mt-4">
+                <button
+                  // onClick={handleBid}
+                  className="px-4 py-2 font-semibold text-white bg-green-600 rounded-md hover:bg-green-700"
+                >
+                  Bid
+                </button>
+                <button
+                  // onClick={handleAddToWatchlist}
+                  className="px-4 py-2 font-semibold text-white bg-purple-600 rounded-md hover:bg-purple-700"
+                >
+                  Add to Watchlist
                 </button>
               </div>
             )}
