@@ -27,6 +27,23 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(email, password, **extra_fields)
 
+    def generate_unique_username(self, first_name, last_name):
+        base_username = (first_name or "user").lower()
+
+        if last_name:
+            base_username += last_name.lower()
+
+        # Remove spaces and special characters
+        base_username = "".join(filter(str.isalnum, base_username))
+
+        # Ensure uniqueness by adding random digits if necessary
+        username = base_username
+        counter = 1
+        while CustomUser.objects.filter(username=username).exists():
+            username = f"{base_username}{random.randint(100, 999)}"
+            counter += 1
+        return username
+
 
 class CustomUser(AbstractUser):
     email = models.EmailField(max_length=200, unique=True)
@@ -41,6 +58,12 @@ class CustomUser(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    def save(self, *args, **kwargs):
+        if not self.username:
+            self.username = CustomUser.objects.generate_unique_username(
+                self.first_name, self.last_name)
+        super().save(*args, **kwargs)
 
 
 @receiver(reset_password_token_created)
