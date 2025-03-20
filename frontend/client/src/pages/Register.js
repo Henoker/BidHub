@@ -52,12 +52,9 @@ export default function Register() {
       toast.error(message);
     }
 
-    if (isSuccess || user) {
+    if (isSuccess && !user) {
       toast.success("Your registration was successful");
-      setTimeout(() => {
-        dispatch(reset()); // Reset Redux state
-        navigate("/login");
-      }, 2000);
+      navigate("/login");
     }
 
     dispatch(reset());

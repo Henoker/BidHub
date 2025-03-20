@@ -110,6 +110,21 @@ export const updateListing = createAsyncThunk(
   }
 );
 
+export const placeNewBid = createAsyncThunk(
+  "listing/placeNewBid",
+  async ({ listingId, newBid }, { rejectWithValue }) => {
+    try {
+      const response = await auctionAPIService.placeNewBid({
+        listingId,
+        newBid,
+      });
+      return response; // Return the response data
+    } catch (error) {
+      return rejectWithValue(error.response.data); // Handle errors
+    }
+  }
+);
+
 export const ActiveListingsSlice = createSlice({
   name: "listing",
   initialState,
@@ -194,6 +209,29 @@ export const ActiveListingsSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      // Handle placeNewBid
+      .addCase(placeNewBid.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(placeNewBid.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        // Update the listing with the new bid
+        if (state.listing && state.listing.id === action.payload.listingId) {
+          state.listing.bid = action.payload.bid; // Update the bid in the current listing
+        }
+        // Optionally, update the bid in the listings array
+        state.listings = state.listings.map((listing) =>
+          listing.id === action.payload.listingId
+            ? { ...listing, bid: action.payload.bid }
+            : listing
+        );
+      })
+      .addCase(placeNewBid.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload?.message || "Failed to place bid";
       });
   },
 });

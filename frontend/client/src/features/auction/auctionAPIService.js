@@ -105,12 +105,33 @@ const updateListing = async ({ listingId, listingData }) => {
   }
 };
 
+const placeNewBid = async ({ listingId, newBid }) => {
+  try {
+    const token = getToken();
+    const response = await axiosInstance.post(
+      `new-bid/${listingId}/`, // Use the correct endpoint
+      { new_bid: newBid }, // Match the backend's expected payload
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data; // Return the response for further handling
+  } catch (error) {
+    console.error("Error placing bid:", error);
+    throw error; // Propagate the error for handling in the component
+  }
+};
+
 const auctionAPIService = {
   getAuctionListings,
   getListingById,
   deleteListing,
   createListing,
   updateListing,
+  placeNewBid,
 };
 
 export default auctionAPIService;
