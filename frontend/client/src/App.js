@@ -16,7 +16,7 @@ import Watchlists from "./pages/Watchlists";
 import Listing from "./pages/Listing";
 import ProtectedRoute from "./components/ProtectedRoute";
 import EditListing from "./pages/EditListing";
-
+import PlaceBid from "./pages/PlaceBid";
 const App = () => {
   return (
     <>
@@ -43,6 +43,7 @@ const App = () => {
             />
             <Route path="/edit-listing/:id" element={<EditListing />} />
             <Route path="/watchlists" element={<Watchlists />} />
+            <Route path="/listing/:id/place-bid" element={<PlaceBid />} />
           </Route>
 
           <Route path="*" element={<NotFoundPage />} />

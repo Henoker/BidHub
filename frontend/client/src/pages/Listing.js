@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { fetchListingById, reset } from "../features/auction/auctionSlice";
 import { user } from "../features/auth/authSlice";
 import Spinner from "../components/Spinner";
@@ -100,12 +100,14 @@ export default function Listing() {
             ) : (
               // Show Bid and Add to Watchlist buttons for non-owners
               <div className="flex space-x-4 mt-4">
-                <button
-                  // onClick={handleBid}
-                  className="px-4 py-2 font-semibold text-white bg-green-600 rounded-md hover:bg-green-700"
-                >
-                  Bid
-                </button>
+                <Link to={`/listing/${listingId}/place-bid`}>
+                  <button
+                    // onClick={handleBid}
+                    className="px-4 py-2 font-semibold text-white bg-green-600 rounded-md hover:bg-green-700"
+                  >
+                    Bid
+                  </button>
+                </Link>
                 <button
                   // onClick={handleAddToWatchlist}
                   className="px-4 py-2 font-semibold text-white bg-purple-600 rounded-md hover:bg-purple-700"
