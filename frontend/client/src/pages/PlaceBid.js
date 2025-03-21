@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { placeNewBid } from "../features/auction/auctionSlice";
+
 export default function PlaceBid({ listingId }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Initialize useNavigate
   const { isLoading, isError, message } = useSelector((state) => state.listing);
   const [newBid, setNewBid] = useState("");
 
@@ -19,6 +22,7 @@ export default function PlaceBid({ listingId }) {
       .then(() => {
         alert("Bid placed successfully!");
         setNewBid(""); // Reset the input field
+        navigate("/active-listings");
       })
       .catch((error) => {
         alert(`Failed to place bid: ${error.message}`);
@@ -43,7 +47,7 @@ export default function PlaceBid({ listingId }) {
           />
         </div>
         <button
-          type="button"
+          type="submit"
           disabled={isLoading}
           className="px-8 py-3 space-x-2 font-semibold rounded bg-violet-600 text-gray-50"
         >

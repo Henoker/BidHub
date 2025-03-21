@@ -111,14 +111,14 @@ export const updateListing = createAsyncThunk(
 );
 
 export const placeNewBid = createAsyncThunk(
-  "listing/placeNewBid",
+  "auction/placeNewBid",
   async ({ listingId, newBid }, { rejectWithValue }) => {
     try {
       const response = await auctionAPIService.placeNewBid({
         listingId,
         newBid,
       });
-      return response; // Return the response data
+      return { listingId, newBid: response.bid }; // Return the new bid and listing ID
     } catch (error) {
       return rejectWithValue(error.response.data); // Handle errors
     }
@@ -127,7 +127,12 @@ export const placeNewBid = createAsyncThunk(
 
 export const ActiveListingsSlice = createSlice({
   name: "listing",
-  initialState,
+  initialState: {
+    listing: null,
+    isLoading: false,
+    isError: false,
+    message: "",
+  },
   reducers: {
     reset: (state) => initialState,
   },
@@ -216,17 +221,10 @@ export const ActiveListingsSlice = createSlice({
       })
       .addCase(placeNewBid.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.isSuccess = true;
-        // Update the listing with the new bid
+        // Update the bid in the listing object
         if (state.listing && state.listing.id === action.payload.listingId) {
-          state.listing.bid = action.payload.bid; // Update the bid in the current listing
+          state.listing.bid.bid = action.payload.newBid; // Update the bid amount
         }
-        // Optionally, update the bid in the listings array
-        state.listings = state.listings.map((listing) =>
-          listing.id === action.payload.listingId
-            ? { ...listing, bid: action.payload.bid }
-            : listing
-        );
       })
       .addCase(placeNewBid.rejected, (state, action) => {
         state.isLoading = false;
