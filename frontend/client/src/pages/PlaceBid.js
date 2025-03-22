@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { placeBid } from "../features/auction/auctionSlice";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function PlaceBid() {
   const { id: listingId } = useParams();
@@ -12,18 +13,25 @@ export default function PlaceBid() {
 
   const { user } = useSelector((state) => state.auth);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!bidAmount || isNaN(bidAmount)) {
-      alert("Please enter a valid bid amount.");
+      toast.error("Please enter a valid bid amount.");
       return;
     }
 
-    dispatch(placeBid({ listingId, bid: bidAmount, userId: user.user.id }));
+    try {
+      await dispatch(
+        placeBid({ listingId, bid: bidAmount, userId: user.user.id })
+      ).unwrap();
+      toast.success("Bid placed successfully!");
+      navigate("/active-listings"); // ✅ Correct navigation
+    } catch (error) {
+      toast.error(error?.message || "Failed to place bid.");
+    }
+
     setBidAmount(""); // Reset input after submitting
-    alert("Bid placed successfully!");
-    navigate(`/active-listings"}`);
   };
 
   return (
