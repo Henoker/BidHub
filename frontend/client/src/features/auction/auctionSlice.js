@@ -110,25 +110,21 @@ export const updateListing = createAsyncThunk(
   }
 );
 
-export const placeNewBid = createAsyncThunk(
-  "auction/placeNewBid",
-  async ({ listingId, newBid }, { rejectWithValue }) => {
+// Place bid action
+export const placeBid = createAsyncThunk(
+  "auction/placeBid",
+  async ({ listingId, bid, userId }, thunkAPI) => {
     try {
-      const response = await auctionAPIService.placeNewBid({
-        listingId,
-        newBid,
-      });
-      return { listingId, newBid: response.bid }; // Return the new bid and listing ID
+      return await auctionAPIService.placeBid(listingId, bid, userId);
     } catch (error) {
-      return rejectWithValue(error.response.data); // Handle errors
+      return thunkAPI.rejectWithValue(error.response?.data || error.message);
     }
   }
 );
-
 export const ActiveListingsSlice = createSlice({
   name: "listing",
   initialState: {
-    listing: null,
+    listing: [],
     isLoading: false,
     isError: false,
     message: "",
@@ -216,20 +212,20 @@ export const ActiveListingsSlice = createSlice({
         state.message = action.payload;
       })
       // Handle placeNewBid
-      .addCase(placeNewBid.pending, (state) => {
+      .addCase(placeBid.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(placeNewBid.fulfilled, (state, action) => {
+      .addCase(placeBid.fulfilled, (state, action) => {
         state.isLoading = false;
-        // Update the bid in the listing object
-        if (state.listing && state.listing.id === action.payload.listingId) {
-          state.listing.bid.bid = action.payload.newBid; // Update the bid amount
-        }
+        state.listing = {
+          ...state.listing,
+          bid: action.payload,
+        };
       })
-      .addCase(placeNewBid.rejected, (state, action) => {
+      .addCase(placeBid.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.message = action.payload?.message || "Failed to place bid";
+        state.message = action.payload;
       });
   },
 });

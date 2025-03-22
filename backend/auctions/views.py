@@ -155,18 +155,30 @@ class NewBidView(APIView):
     authentication_classes = [TokenAuthentication]
 
     def post(self, request, listing_id):
-        listing = AuctionListings.objects.get(pk=listing_id)
-        new_bid = int(request.data["new_bid"])
-        current_bid = listing.bid.bid
+        try:
+            listing = AuctionListings.objects.get(pk=listing_id)
+            # ✅ Use .get() to avoid KeyError
+            new_bid = int(request.data.get("new_bid"))
 
-        if new_bid > current_bid:
-            updated_bid = Bid(bid=new_bid, user=request.user)
-            updated_bid.save()
-            listing.bid = updated_bid
-            listing.save()
-            return Response({"message": "Your bid was added successfully."}, status=status.HTTP_200_OK)
-        else:
-            return Response({"message": "Sorry, your bid should be bigger than the latest bid."}, status=status.HTTP_400_BAD_REQUEST)
+            if new_bid is None:
+                return Response({"error": "new_bid is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+            current_bid = listing.bid.bid
+
+            if new_bid > current_bid:
+                updated_bid = Bid(bid=new_bid, user=request.user)
+                updated_bid.save()
+                listing.bid = updated_bid
+                listing.save()
+                return Response({"message": "Your bid was added successfully."}, status=status.HTTP_200_OK)
+            else:
+                return Response({"message": "Your bid should be higher than the latest bid."}, status=status.HTTP_400_BAD_REQUEST)
+
+        except AuctionListings.DoesNotExist:
+            return Response({"error": "Listing not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        except ValueError:
+            return Response({"error": "Invalid bid amount."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class IndexView(APIView):

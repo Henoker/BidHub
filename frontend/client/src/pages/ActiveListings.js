@@ -1,3 +1,4 @@
+// src/pages/ActiveListings.js
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getAuctionListings, reset } from "../features/auction/auctionSlice";
@@ -31,6 +32,11 @@ export default function ActiveListings() {
     return <div>Error: {message}</div>;
   }
 
+  // Check if listings is undefined or empty
+  if (!listings || listings.length === 0) {
+    return <div>No listings found.</div>;
+  }
+
   return (
     <section className="bg-gray-100 text-gray-800">
       <div className="container max-w-6xl p-6 mx-auto space-y-6 sm:space-y-12">
@@ -57,7 +63,7 @@ export default function ActiveListings() {
               </span>
               <p>{listings[0].description}</p>
               <p className="font-semibold">
-                Current Bid: ${listings[0].bid.bid}
+                Current Bid: ${listings[0].bid?.bid || "N/A"}
               </p>
             </div>
           </a>
@@ -85,10 +91,12 @@ export default function ActiveListings() {
                   {listing.name_of_item}
                 </h3>
                 <span className="text-xs text-gray-600">
-                  Listed by: {listing.owner.username}
+                  Listed by: {listing.owner?.username || "Unknown"}
                 </span>
                 <p>{listing.description}</p>
-                <p className="font-semibold">Current Bid: ${listing.bid.bid}</p>
+                <p className="font-semibold">
+                  Current Bid: ${listing.bid?.bid || "N/A"}
+                </p>
               </div>
             </a>
           ))}
