@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { fetchListingById, reset } from "../features/auction/auctionSlice";
-import { user } from "../features/auth/authSlice";
 import Spinner from "../components/Spinner";
+import { addToWatchlist } from "../features/auction/auctionAPIService";
 
 export default function Listing() {
   const dispatch = useDispatch();
@@ -50,6 +50,10 @@ export default function Listing() {
 
   const handleEdit = () => {
     navigate(`/edit-listing/${listingId}`); // Redirect to the EditListing component
+  };
+
+  const handleAdd = () => {
+    dispatch(addToWatchlist(listingId));
   };
 
   const handleDelete = () => {
@@ -110,6 +114,7 @@ export default function Listing() {
                 </Link>
                 <button
                   // onClick={handleAddToWatchlist}
+                  onClick={handleAdd}
                   className="px-4 py-2 font-semibold text-white bg-purple-600 rounded-md hover:bg-purple-700"
                 >
                   Add to Watchlist

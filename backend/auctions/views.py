@@ -133,12 +133,45 @@ class WatchlistListView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
 
+    # GET - Retrieve the user's watchlist
     def get(self, request):
         user = request.user
         users_watchlist_of_items = user.watch_listings.all()
         serializer = AuctionListingsSerializer(
             users_watchlist_of_items, many=True)
         return Response(serializer.data)
+
+    # POST - Add an item to the watchlist
+    def post(self, request):
+        user = request.user
+        # Ensure frontend sends this
+        listing_id = request.data.get("listing_id")
+        if not listing_id:
+            return Response({"message": "listing_id is required"}, status=400)
+
+        try:
+            listing = AuctionListings.objects.get(id=listing_id)
+            # Assuming a ManyToMany relationship
+            user.watch_listings.add(listing)
+            return Response({"message": "Added to watchlist"}, status=201)
+        except AuctionListings.DoesNotExist:
+            return Response({"message": "Listing not found"}, status=404)
+
+    # DELETE - Remove an item from the watchlist
+    def delete(self, request):
+        user = request.user
+        listing_id = request.data.get("listing_id")
+
+        if not listing_id:
+            return Response({"error": "listing_id is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        listing = get_object_or_404(AuctionListings, id=listing_id)
+
+        if listing not in user.watch_listings.all():
+            return Response({"message": "Listing is not in watchlist"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.watch_listings.remove(listing)  # Remove from watchlist
+        return Response({"message": "Listing removed from watchlist"}, status=status.HTTP_200_OK)
 
 
 class CategoryView(APIView):

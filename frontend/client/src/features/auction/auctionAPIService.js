@@ -1,4 +1,5 @@
 import axios from "axios";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 // Set the base URL to the root of your API
 const API_URL = "http://localhost:8000/api/v1/";
@@ -105,7 +106,7 @@ const updateListing = async ({ listingId, listingData }) => {
   }
 };
 
-// src/services/auctionAPIService.js
+// place new bid
 const placeBid = async (listingId, new_bid, userId) => {
   try {
     const token = getToken();
@@ -128,6 +129,60 @@ const placeBid = async (listingId, new_bid, userId) => {
   }
 };
 
+export const fetchWatchlist = createAsyncThunk(
+  "auctions/fetchWatchlist",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = getToken();
+      const response = await axiosInstance.get("watchlist/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Error fetching watchlist"
+      );
+    }
+  }
+);
+
+export const addToWatchlist = createAsyncThunk(
+  "auctions/addToWatchlist",
+  async (listingId, { rejectWithValue }) => {
+    try {
+      const token = getToken();
+      const response = await axiosInstance.post(
+        "watchlist/",
+        { listing_id: listingId },
+        { headers: { Authorization: `Token ${token}` } }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Error adding to watchlist"
+      );
+    }
+  }
+);
+
+export const removeFromWatchlist = createAsyncThunk(
+  "auctions/removeFromWatchlist",
+  async (listingId, { rejectWithValue }) => {
+    try {
+      const token = getToken();
+      const response = await axiosInstance.delete("watchlist/", {
+        headers: { Authorization: `Token ${token}` },
+        data: { listing_id: listingId }, // DELETE requires `data`
+      });
+      return { listingId, message: response.data };
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Error removing from watchlist"
+      );
+    }
+  }
+);
+
 const auctionAPIService = {
   getAuctionListings,
   getListingById,
@@ -135,6 +190,9 @@ const auctionAPIService = {
   createListing,
   updateListing,
   placeBid,
+  fetchWatchlist,
+  addToWatchlist,
+  removeFromWatchlist,
 };
 
 export default auctionAPIService;

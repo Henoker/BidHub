@@ -1,5 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import auctionAPIService from "./auctionAPIService";
+import {
+  fetchWatchlist,
+  addToWatchlist,
+  removeFromWatchlist,
+} from "./auctionAPIService";
 
 const initialState = {
   listings: [],
@@ -125,12 +130,16 @@ export const ActiveListingsSlice = createSlice({
   name: "listing",
   initialState: {
     listing: [],
+    watchlist: [],
     isLoading: false,
     isError: false,
     message: "",
   },
   reducers: {
     reset: (state) => initialState,
+    clearWatchlist(state) {
+      state.watchlist = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -226,10 +235,54 @@ export const ActiveListingsSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(fetchWatchlist.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.message = "";
+      })
+      .addCase(fetchWatchlist.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.watchlist = action.payload;
+      })
+      .addCase(fetchWatchlist.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      // Handle adding to watchlist
+      .addCase(addToWatchlist.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(addToWatchlist.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.watchlist = [];
+        state.watchlist.push(action.payload); // Add new item to the array
+      })
+      .addCase(addToWatchlist.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+
+      // Handle removing from watchlist
+      .addCase(removeFromWatchlist.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(removeFromWatchlist.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.watchlist = state.watchlist.filter(
+          (item) => item.id !== action.payload.listingId
+        );
+      })
+      .addCase(removeFromWatchlist.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
       });
   },
 });
 
-export const { reset } = ActiveListingsSlice.actions;
+export const { reset, clearWatchlist } = ActiveListingsSlice.actions;
 
 export default ActiveListingsSlice.reducer;
