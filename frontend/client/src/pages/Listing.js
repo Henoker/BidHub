@@ -1,17 +1,23 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { fetchListingById, reset } from "../features/auction/auctionSlice";
+import {
+  fetchListingById,
+  reset,
+  resetCloseAuctionStatus,
+} from "../features/auction/auctionSlice";
 import Spinner from "../components/Spinner";
-import { addToWatchlist } from "../features/auction/auctionAPIService";
+import {
+  addToWatchlist,
+  closeAuctionThunk,
+} from "../features/auction/auctionAPIService";
 
 export default function Listing() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id: listingId } = useParams(); // Extract `listingId` from the URL
-  const { listing, isLoading, isError, message } = useSelector(
-    (state) => state.listing
-  );
+  const { listing, isLoading, isError, message, closeAuctionStatus } =
+    useSelector((state) => state.listing);
   const { user } = useSelector((state) => state.auth); // Get the signed-in user
 
   // Debugging: Log the listing owner and signed-in user
@@ -33,6 +39,13 @@ export default function Listing() {
     };
   }, [dispatch, listingId]);
 
+  useEffect(() => {
+    if (closeAuctionStatus === "succeeded") {
+      // Refresh the listing data to show updated closed status
+      dispatch(fetchListingById(listingId));
+    }
+  }, [closeAuctionStatus, dispatch, listingId]);
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -48,6 +61,8 @@ export default function Listing() {
   // Check if the signed-in user is the owner of the listing
   const isOwner = user && listing.owner && user.user.id === listing.owner.id;
 
+  const isClosed = listing.is_closed;
+
   const handleEdit = () => {
     navigate(`/edit-listing/${listingId}`); // Redirect to the EditListing component
   };
@@ -60,6 +75,16 @@ export default function Listing() {
     // Implement delete functionality here
     console.log("Delete listing:", listingId);
     // You can dispatch a delete action here
+  };
+
+  const handleCloseAuction = () => {
+    if (
+      window.confirm(
+        "Are you sure you want to close this auction? This cannot be undone."
+      )
+    ) {
+      dispatch(closeAuctionThunk(listingId));
+    }
   };
 
   return (
@@ -82,12 +107,32 @@ export default function Listing() {
             <p className="font-semibold">
               Current Bid: ${listing.bid?.bid || "N/A"}
             </p>
+            {isClosed && (
+              <div className="px-4 py-2 font-semibold text-white bg-gray-600 rounded-md">
+                Auction Closed
+              </div>
+            )}
             {/* Conditionally render buttons based on ownership */}
             {/* Conditionally render buttons based on ownership */}
             {/* Conditionally render buttons based on ownership */}
             {isOwner ? (
               // Show Edit and Delete buttons for the owner
               <div className="flex space-x-4 mt-4">
+                {!isClosed && (
+                  <button
+                    onClick={handleCloseAuction}
+                    disabled={closeAuctionStatus === "loading"}
+                    className={`px-4 py-2 font-semibold text-white rounded-md ${
+                      closeAuctionStatus === "loading"
+                        ? "bg-gray-500"
+                        : "bg-yellow-600 hover:bg-yellow-700"
+                    }`}
+                  >
+                    {closeAuctionStatus === "loading"
+                      ? "Closing..."
+                      : "Close Auction"}
+                  </button>
+                )}
                 <button
                   onClick={handleEdit}
                   className="px-4 py-2 font-semibold text-white bg-blue-600 rounded-md hover:bg-blue-700"

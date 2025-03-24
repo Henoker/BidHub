@@ -4,6 +4,7 @@ import {
   fetchWatchlist,
   addToWatchlist,
   removeFromWatchlist,
+  closeAuctionThunk,
 } from "./auctionAPIService";
 
 const initialState = {
@@ -13,6 +14,7 @@ const initialState = {
   isLoading: false,
   isSuccess: false,
   message: "",
+  closeAuctionStatus: "idle",
 };
 
 // Get all active auction listings
@@ -139,6 +141,9 @@ export const ActiveListingsSlice = createSlice({
     reset: (state) => initialState,
     clearWatchlist(state) {
       state.watchlist = [];
+    },
+    resetCloseAuctionStatus: (state) => {
+      state.closeAuctionStatus = "idle";
     },
   },
   extraReducers: (builder) => {
@@ -279,10 +284,31 @@ export const ActiveListingsSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      // Handle close auction
+      .addCase(closeAuctionThunk.pending, (state) => {
+        state.closeAuctionStatus = "loading";
+      })
+      .addCase(closeAuctionThunk.fulfilled, (state, action) => {
+        state.closeAuctionStatus = "succeeded";
+        const { listingId } = action.payload;
+        // Update the listing in the state to mark it as closed
+        state.listings = state.listings.map((listing) =>
+          listing.id === listingId ? { ...listing, is_closed: true } : listing
+        );
+        // Also update currentListing if it's the one being closed
+        if (state.currentListing?.id === listingId) {
+          state.currentListing.is_closed = true;
+        }
+      })
+      .addCase(closeAuctionThunk.rejected, (state, action) => {
+        state.closeAuctionStatus = "failed";
+        state.error = action.payload;
       });
   },
 });
 
-export const { reset, clearWatchlist } = ActiveListingsSlice.actions;
+export const { reset, clearWatchlist, resetCloseAuctionStatus } =
+  ActiveListingsSlice.actions;
 
 export default ActiveListingsSlice.reducer;

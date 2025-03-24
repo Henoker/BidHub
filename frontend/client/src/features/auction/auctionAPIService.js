@@ -183,6 +183,43 @@ export const removeFromWatchlist = createAsyncThunk(
   }
 );
 
+// Close an auction by ID
+const closeAuction = async (listingId) => {
+  try {
+    const token = getToken();
+    const response = await axiosInstance.post(
+      `close-auction/${listingId}/`,
+      {}, // Empty body since we're just closing
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error closing auction:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
+// Add it to your exports
+export const closeAuctionThunk = createAsyncThunk(
+  "auctions/closeAuction",
+  async (listingId, { rejectWithValue }) => {
+    try {
+      const response = await closeAuction(listingId);
+      return { listingId, ...response };
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Error closing auction");
+    }
+  }
+);
+
 const auctionAPIService = {
   getAuctionListings,
   getListingById,
@@ -193,6 +230,8 @@ const auctionAPIService = {
   fetchWatchlist,
   addToWatchlist,
   removeFromWatchlist,
+  closeAuctionThunk,
+  closeAuction,
 };
 
 export default auctionAPIService;
