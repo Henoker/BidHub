@@ -220,6 +220,87 @@ export const closeAuctionThunk = createAsyncThunk(
   }
 );
 
+// Add new comment
+const addComment = async (listingId, commentText) => {
+  try {
+    const token = getToken();
+    const response = await axiosInstance.post(
+      `add-comment/${listingId}/`,
+      { comment: commentText },
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error adding comment:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
+// Get comments for a listing
+// Get comments for a listing
+const getComments = async (listingId) => {
+  try {
+    const token = getToken();
+    const response = await axiosInstance.get(`add-comment/${listingId}/`, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+      // Ensure we always get JSON back
+      headers: { Accept: "application/json" },
+    });
+
+    // Check if response is HTML (error page)
+    if (
+      typeof response.data === "string" &&
+      response.data.startsWith("<!DOCTYPE html>")
+    ) {
+      throw new Error("Server returned HTML error page");
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error fetching comments:",
+      error.response?.data || error.message
+    );
+    // Return empty array if error occurs
+    return [];
+  }
+};
+
+// Create async thunks for Redux
+export const addCommentThunk = createAsyncThunk(
+  "auctions/addComment",
+  async ({ listingId, commentText }, { rejectWithValue }) => {
+    try {
+      const response = await addComment(listingId, commentText);
+      return { listingId, comment: response };
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Error adding comment");
+    }
+  }
+);
+
+export const fetchCommentsThunk = createAsyncThunk(
+  "auctions/fetchComments",
+  async (listingId, { rejectWithValue }) => {
+    try {
+      const response = await getComments(listingId);
+      return { listingId, comments: response }; // Ensure response is an array
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Error fetching comments");
+    }
+  }
+);
+
 const auctionAPIService = {
   getAuctionListings,
   getListingById,
@@ -232,6 +313,10 @@ const auctionAPIService = {
   removeFromWatchlist,
   closeAuctionThunk,
   closeAuction,
+  addComment,
+  getComments,
+  addCommentThunk,
+  fetchCommentsThunk,
 };
 
 export default auctionAPIService;

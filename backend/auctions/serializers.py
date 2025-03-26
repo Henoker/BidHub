@@ -38,3 +38,11 @@ class AuctionListingsSerializer(serializers.ModelSerializer):
         model = AuctionListings
         fields = ['id', 'name_of_item', 'description', 'owner', 'bid',
                   'is_closed', 'url', 'watchlist', 'category', 'comments']
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    writer = serializers.StringRelatedField()
+
+    class Meta:
+        model = Comments
+        fields = ['id', 'text', 'writer', 'created_at']

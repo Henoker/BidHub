@@ -14,6 +14,7 @@ urlpatterns = [
          CloseAuctionView.as_view(), name='close-auction'),
     path('add-comment/<int:listing_id>/',
          AddCommentView.as_view(), name='add-comment'),
+    # urls.py
     path('watchlist/', WatchlistListView.as_view(), name='watchlist-list'),
     path('category/', CategoryView.as_view(), name='category'),
     path('new-bid/<int:listing_id>/', NewBidView.as_view(), name='new-bid'),

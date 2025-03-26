@@ -120,13 +120,35 @@ class AddCommentView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
 
+    def get(self, request, listing_id):
+        try:
+            comments = Comments.objects.filter(
+                listing_id=listing_id).order_by('-created_at')
+            serializer = CommentSerializer(comments, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
     def post(self, request, listing_id):
-        user = request.user
-        text = request.data["comment"]
-        listing = AuctionListings.objects.get(pk=listing_id)
-        new_comment = Comments(text=text, writer=user, listing=listing)
-        new_comment.save()
-        return Response({"message": "Comment added"}, status=status.HTTP_201_CREATED)
+        try:
+            user = request.user
+            text = request.data["comment"]
+            listing = AuctionListings.objects.get(pk=listing_id)
+            new_comment = Comments(text=text, writer=user, listing=listing)
+            new_comment.save()
+            return Response(
+                {"message": "Comment added",
+                    "comment": CommentSerializer(new_comment).data},
+                status=status.HTTP_201_CREATED
+            )
+        except Exception as e:
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class WatchlistListView(APIView):

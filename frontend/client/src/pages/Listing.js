@@ -1,15 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   fetchListingById,
   reset,
   resetCloseAuctionStatus,
+  resetCommentStatus,
+  selectCommentError,
+  selectCommentStatus,
+  selectCommentsByListingId,
 } from "../features/auction/auctionSlice";
 import Spinner from "../components/Spinner";
 import {
   addToWatchlist,
   closeAuctionThunk,
+  fetchCommentsThunk,
+  addCommentThunk,
 } from "../features/auction/auctionAPIService";
 
 export default function Listing() {
@@ -19,7 +25,34 @@ export default function Listing() {
   const { listing, isLoading, isError, message, closeAuctionStatus } =
     useSelector((state) => state.listing);
   const { user } = useSelector((state) => state.auth); // Get the signed-in user
+  const [commentText, setCommentText] = useState("");
 
+  const comments =
+    useSelector((state) => selectCommentsByListingId(state, listingId)) || [];
+  const commentStatus = useSelector(selectCommentStatus);
+  const commentError = useSelector(selectCommentError);
+
+  useEffect(() => {
+    dispatch(fetchCommentsThunk(listingId));
+
+    return () => {
+      dispatch(resetCommentStatus());
+    };
+  }, [dispatch, listingId]);
+
+  const handleCommentSubmit = (e) => {
+    e.preventDefault();
+    if (commentText.trim()) {
+      dispatch(addCommentThunk({ listingId, commentText }));
+      setCommentText("");
+    }
+  };
+
+  useEffect(() => {
+    console.log("Current comments state:", comments);
+  }, [comments]);
+
+  // And modify your comments rendering:
   // Debugging: Log the listing owner and signed-in user
   useEffect(() => {
     if (listing) {
@@ -168,73 +201,62 @@ export default function Listing() {
             )}
           </div>
         </div>
-        <div className="container flex flex-col w-full max-w-lg p-6 mx-auto divide-y rounded-md divide-gray-300 bg-gray-50 text-gray-800">
-          <div className="flex justify-between p-4">
-            <div className="flex space-x-4">
-              <div>
-                <img
-                  src="https://source.unsplash.com/100x100/?portrait"
-                  alt=""
-                  className="object-cover w-12 h-12 rounded-full bg-gray-500"
-                />
-              </div>
-              <div>
-                <h4 className="font-bold">Leroy Jenkins</h4>
-                <span className="text-xs text-gray-600">2 days ago</span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-2 dark:text-yellow-700">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512"
-                className="w-5 h-5 fill-current"
+      </div>
+      <div className="container max-w-2xl p-6 mx-auto">
+        <h3 className="text-xl font-semibold mb-4">Comments</h3>
+
+        {/* Comment Form */}
+        {user && (
+          <form onSubmit={handleCommentSubmit} className="mb-6">
+            <div className="flex flex-col">
+              <textarea
+                rows="3"
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                placeholder="Write your comment..."
+                className="p-3 border rounded-md mb-2"
+                disabled={commentStatus === "loading"}
+              />
+              <button
+                type="submit"
+                disabled={commentStatus === "loading" || !commentText.trim()}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400"
               >
-                <path d="M494,198.671a40.536,40.536,0,0,0-32.174-27.592L345.917,152.242,292.185,47.828a40.7,40.7,0,0,0-72.37,0L166.083,152.242,50.176,171.079a40.7,40.7,0,0,0-22.364,68.827l82.7,83.368-17.9,116.055a40.672,40.672,0,0,0,58.548,42.538L256,428.977l104.843,52.89a40.69,40.69,0,0,0,58.548-42.538l-17.9-116.055,82.7-83.368A40.538,40.538,0,0,0,494,198.671Zm-32.53,18.7L367.4,312.2l20.364,132.01a8.671,8.671,0,0,1-12.509,9.088L256,393.136,136.744,453.3a8.671,8.671,0,0,1-12.509-9.088L144.6,312.2,50.531,217.37a8.7,8.7,0,0,1,4.778-14.706L187.15,181.238,248.269,62.471a8.694,8.694,0,0,1,15.462,0L324.85,181.238l131.841,21.426A8.7,8.7,0,0,1,461.469,217.37Z"></path>
-              </svg>
-              <span className="text-xl font-bold">4.5</span>
+                {commentStatus === "loading" ? "Posting..." : "Post Comment"}
+              </button>
             </div>
-          </div>
-          <div className="p-4 space-y-2 text-sm text-gray-600">
-            <p>
-              Vivamus sit amet turpis leo. Praesent varius eleifend elit, eu
-              dictum lectus consequat vitae. Etiam ut dolor id justo fringilla
-              finibus.
-            </p>
-            <p>
-              Donec eget ultricies diam, eu molestie arcu. Etiam nec lacus eu
-              mauris cursus venenatis. Maecenas gravida urna vitae accumsan
-              feugiat. Vestibulum commodo, ante sit urna purus rutrum sem.
-            </p>
-          </div>
-          <div className="flex flex-col max-w-xl p-8 shadow-sm rounded-xl lg:p-12 bg-gray-50 text-gray-800">
-            <div className="flex flex-col items-center ">
-              <h2 className="text-3xl font-semibold text-center">
-                Leave Your Comments!
-              </h2>
-              <div className="flex flex-col w-full">
-                <textarea
-                  rows="3"
-                  placeholder="Message..."
-                  className="p-4 rounded-md resize-none text-gray-800 bg-gray-50"
-                ></textarea>
-                <button
-                  type="button"
-                  className="py-4 my-8 font-semibold rounded-md text-gray-50 bg-violet-600"
-                >
-                  Leave feedback
-                </button>
+            {commentStatus === "failed" && (
+              <p className="text-red-500 mt-2">{commentError}</p>
+            )}
+          </form>
+        )}
+
+        {/* Comments List */}
+        <div className="space-y-4">
+          {Array.isArray(comments) && comments.length > 0 ? (
+            comments.map((comment) => (
+              <div key={comment.id} className="bg-white p-4 rounded-lg shadow">
+                <div className="flex items-center mb-2">
+                  <img
+                    src="https://via.placeholder.com/40"
+                    alt={comment.writer.username}
+                    className="w-8 h-8 rounded-full mr-2"
+                  />
+                  <span className="font-semibold">
+                    {comment.writer.username}
+                  </span>
+                  <span className="text-gray-500 text-sm ml-2">
+                    {new Date(comment.created_at).toLocaleString()}
+                  </span>
+                </div>
+                <p>{comment.text}</p>
               </div>
-            </div>
-            <div className="flex items-center justify-center">
-              <a
-                rel="noopener noreferrer"
-                href="#1"
-                className="text-sm text-gray-600"
-              >
-                Maybe later
-              </a>
-            </div>
-          </div>
+            ))
+          ) : (
+            <p className="text-gray-500">
+              No comments yet. Be the first to comment!
+            </p>
+          )}
         </div>
       </div>
     </section>

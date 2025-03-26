@@ -1,20 +1,30 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  createSelector,
+} from "@reduxjs/toolkit";
 import auctionAPIService from "./auctionAPIService";
 import {
   fetchWatchlist,
   addToWatchlist,
   removeFromWatchlist,
   closeAuctionThunk,
+  addCommentThunk,
+  fetchCommentsThunk,
 } from "./auctionAPIService";
 
 const initialState = {
   listings: [],
   listing: {}, // Single listing data
+  watchlist: [],
   isError: false,
   isLoading: false,
   isSuccess: false,
   message: "",
   closeAuctionStatus: "idle",
+  comments: {}, // Store comments by listing ID
+  commentStatus: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
+  commentError: null,
 };
 
 // Get all active auction listings
@@ -130,13 +140,7 @@ export const placeBid = createAsyncThunk(
 );
 export const ActiveListingsSlice = createSlice({
   name: "listing",
-  initialState: {
-    listing: [],
-    watchlist: [],
-    isLoading: false,
-    isError: false,
-    message: "",
-  },
+  initialState,
   reducers: {
     reset: (state) => initialState,
     clearWatchlist(state) {
@@ -144,6 +148,10 @@ export const ActiveListingsSlice = createSlice({
     },
     resetCloseAuctionStatus: (state) => {
       state.closeAuctionStatus = "idle";
+    },
+    resetCommentStatus: (state) => {
+      state.commentStatus = "idle";
+      state.commentError = null;
     },
   },
   extraReducers: (builder) => {
@@ -304,11 +312,57 @@ export const ActiveListingsSlice = createSlice({
       .addCase(closeAuctionThunk.rejected, (state, action) => {
         state.closeAuctionStatus = "failed";
         state.error = action.payload;
+      })
+      // Add Comment cases
+      .addCase(addCommentThunk.pending, (state) => {
+        state.commentStatus = "loading";
+      })
+      .addCase(addCommentThunk.fulfilled, (state, action) => {
+        state.commentStatus = "succeeded";
+        const { listingId, comment } = action.payload;
+        if (!state.comments[listingId]) {
+          state.comments[listingId] = [];
+        }
+        state.comments[listingId].unshift(comment); // Add new comment at beginning
+      })
+      .addCase(addCommentThunk.rejected, (state, action) => {
+        state.commentStatus = "failed";
+        state.commentError = action.payload;
+      })
+
+      // Fetch Comments cases
+      .addCase(fetchCommentsThunk.pending, (state) => {
+        state.commentStatus = "loading";
+      })
+      .addCase(fetchCommentsThunk.fulfilled, (state, action) => {
+        console.log("Updating comments:", action.payload);
+        state.commentStatus = "succeeded";
+        const { listingId, comments } = action.payload;
+        state.comments[listingId] = comments;
+      })
+      .addCase(fetchCommentsThunk.rejected, (state, action) => {
+        state.commentStatus = "failed";
+        state.commentError = action.payload;
       });
   },
 });
 
-export const { reset, clearWatchlist, resetCloseAuctionStatus } =
-  ActiveListingsSlice.actions;
+export const selectCommentsByListingId = createSelector(
+  [(state) => state.listing, (_, listingId) => listingId], // Changed from auctions to listing
+  (listing, listingId) => {
+    if (!listing || !listing.comments) return [];
+    return listing.comments[listingId] || [];
+  }
+);
+
+export const selectCommentStatus = (state) => state.listing.commentStatus;
+export const selectCommentError = (state) => state.listing.commentError;
+
+export const {
+  reset,
+  clearWatchlist,
+  resetCommentStatus,
+  resetCloseAuctionStatus,
+} = ActiveListingsSlice.actions;
 
 export default ActiveListingsSlice.reducer;
