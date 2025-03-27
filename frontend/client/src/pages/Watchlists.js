@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 
 export default function Watchlists() {
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   const { watchlist, isLoading, isError, message } = useSelector(
     (state) => state.listing
   );
