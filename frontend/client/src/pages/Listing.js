@@ -66,6 +66,7 @@ export default function Listing() {
   // Fetch listing data when the component mounts
   useEffect(() => {
     dispatch(fetchListingById(listingId));
+    dispatch(fetchCommentsThunk(listingId));
 
     return () => {
       dispatch(reset());
@@ -233,17 +234,17 @@ export default function Listing() {
 
         {/* Comments List */}
         <div className="space-y-4">
-          {Array.isArray(comments) && comments.length > 0 ? (
+          {comments && comments.length > 0 ? (
             comments.map((comment) => (
               <div key={comment.id} className="bg-white p-4 rounded-lg shadow">
                 <div className="flex items-center mb-2">
                   <img
                     src="https://via.placeholder.com/40"
-                    alt={comment.writer.username}
+                    alt={comment.writer?.username || "Anonymous"}
                     className="w-8 h-8 rounded-full mr-2"
                   />
                   <span className="font-semibold">
-                    {comment.writer.username}
+                    {comment.writer?.username || "Anonymous"}
                   </span>
                   <span className="text-gray-500 text-sm ml-2">
                     {new Date(comment.created_at).toLocaleString()}

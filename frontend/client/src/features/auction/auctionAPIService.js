@@ -281,8 +281,10 @@ export const addCommentThunk = createAsyncThunk(
   "auctions/addComment",
   async ({ listingId, commentText }, { rejectWithValue }) => {
     try {
-      const response = await addComment(listingId, commentText);
-      return { listingId, comment: response };
+      const response = await axiosInstance.post(`add-comment/${listingId}/`, {
+        comment: commentText,
+      });
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Error adding comment");
     }
@@ -293,8 +295,8 @@ export const fetchCommentsThunk = createAsyncThunk(
   "auctions/fetchComments",
   async (listingId, { rejectWithValue }) => {
     try {
-      const response = await getComments(listingId);
-      return { listingId, comments: response }; // Ensure response is an array
+      const response = await axiosInstance.get(`comments/${listingId}/`);
+      return { listingId, comments: response.data };
     } catch (error) {
       return rejectWithValue(error.response?.data || "Error fetching comments");
     }

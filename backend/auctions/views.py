@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from .models import AuctionListings, Bid, Comments
-from .serializers import AuctionListingsSerializer, BidSerializer, CommentsSerializer
+from .serializers import AuctionListingsSerializer, BidSerializer, CommentSerializer
 from django.contrib.auth import get_user_model
 from knox.auth import TokenAuthentication
 from django.shortcuts import get_object_or_404
@@ -55,7 +55,7 @@ class DisplayListingView(APIView):
         serializer = AuctionListingsSerializer(listing)
         return Response({
             "listing": serializer.data,
-            "comments": CommentsSerializer(comments, many=True).data,
+            "comments": CommentSerializer(comments, many=True).data,
             "is_owner": is_owner,
             "is_listing_in_watchlist": is_listing_in_watchlist
         })
@@ -120,12 +120,16 @@ class AddCommentView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
 
-    def get(self, request, listing_id):
+    def post(self, request, listing_id):
         try:
-            comments = Comments.objects.filter(
-                listing_id=listing_id).order_by('-created_at')
-            serializer = CommentSerializer(comments, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            listing = AuctionListings.objects.get(pk=listing_id)
+            comment = Comments.objects.create(
+                text=request.data["comment"],
+                writer=request.user,
+                listing=listing
+            )
+            serializer = CommentSerializer(comment)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response(
                 {"error": str(e)},

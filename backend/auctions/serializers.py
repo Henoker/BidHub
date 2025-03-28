@@ -20,19 +20,28 @@ class BidSerializer(serializers.ModelSerializer):
         fields = ['id', 'bid', 'user']
 
 
-class CommentsSerializer(serializers.ModelSerializer):
-    writer = UserSerializer(read_only=True)
+class CommentSerializer(serializers.ModelSerializer):
+    writer = serializers.SerializerMethodField()
+    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = Comments
-        fields = ['id', 'text', 'writer', 'listing']
+        fields = ['id', 'text', 'writer', 'created_at']
+        read_only_fields = ['writer', 'created_at']
+
+    def get_writer(self, obj):
+        return {
+            'id': obj.writer.id,
+            'username': obj.writer.username,
+            'email': obj.writer.email
+        }
 
 
 class AuctionListingsSerializer(serializers.ModelSerializer):
     owner = UserSerializer(read_only=True)
     bid = BidSerializer(read_only=True)
     watchlist = UserSerializer(many=True, read_only=True)
-    comments = CommentsSerializer(many=True, read_only=True)
+    comments = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = AuctionListings
@@ -41,8 +50,17 @@ class AuctionListingsSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    writer = serializers.StringRelatedField()
+    writer = serializers.SerializerMethodField()
+    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = Comments
         fields = ['id', 'text', 'writer', 'created_at']
+        read_only_fields = ['writer', 'created_at']
+
+    def get_writer(self, obj):
+        return {
+            'id': obj.writer.id,
+            'username': obj.writer.username,
+            'email': obj.writer.email
+        }
