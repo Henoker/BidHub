@@ -245,25 +245,15 @@ const addComment = async (listingId, commentText) => {
 };
 
 // Get comments for a listing
-// Get comments for a listing
 const getComments = async (listingId) => {
   try {
     const token = getToken();
-    const response = await axiosInstance.get(`add-comment/${listingId}/`, {
+    const response = await axiosInstance.get(`comments/${listingId}/`, {
       headers: {
         Authorization: `Token ${token}`,
+        Accept: "application/json",
       },
-      // Ensure we always get JSON back
-      headers: { Accept: "application/json" },
     });
-
-    // Check if response is HTML (error page)
-    if (
-      typeof response.data === "string" &&
-      response.data.startsWith("<!DOCTYPE html>")
-    ) {
-      throw new Error("Server returned HTML error page");
-    }
 
     return response.data;
   } catch (error) {
@@ -271,7 +261,6 @@ const getComments = async (listingId) => {
       "Error fetching comments:",
       error.response?.data || error.message
     );
-    // Return empty array if error occurs
     return [];
   }
 };

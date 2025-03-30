@@ -121,38 +121,39 @@ class AddCommentView(APIView):
     authentication_classes = [TokenAuthentication]
 
     def post(self, request, listing_id):
+        """ Add a new comment to a listing """
         try:
-            listing = AuctionListings.objects.get(pk=listing_id)
-            comment = Comments.objects.create(
-                text=request.data["comment"],
+            listing = get_object_or_404(AuctionListings, pk=listing_id)
+            text = request.data.get("comment", "")
+
+            if not text.strip():
+                return Response({"error": "Comment cannot be empty"}, status=status.HTTP_400_BAD_REQUEST)
+
+            new_comment = Comments.objects.create(
+                text=text,
                 writer=request.user,
                 listing=listing
             )
-            serializer = CommentSerializer(comment)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            return Response(
-                {"error": str(e)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
 
-    def post(self, request, listing_id):
-        try:
-            user = request.user
-            text = request.data["comment"]
-            listing = AuctionListings.objects.get(pk=listing_id)
-            new_comment = Comments(text=text, writer=user, listing=listing)
-            new_comment.save()
             return Response(
                 {"message": "Comment added",
                     "comment": CommentSerializer(new_comment).data},
                 status=status.HTTP_201_CREATED
             )
+
         except Exception as e:
-            return Response(
-                {"error": str(e)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetCommentsView(APIView):
+    """ Retrieve all comments for a listing """
+
+    def get(self, request, listing_id):
+        listing = get_object_or_404(AuctionListings, pk=listing_id)
+        comments = Comments.objects.filter(listing=listing).order_by(
+            "-created_at")  # Latest comments first
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class WatchlistListView(APIView):
