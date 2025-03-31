@@ -265,17 +265,30 @@ const getComments = async (listingId) => {
   }
 };
 
-// Create async thunks for Redux
 export const addCommentThunk = createAsyncThunk(
   "auctions/addComment",
   async ({ listingId, commentText }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post(`add-comment/${listingId}/`, {
-        comment: commentText,
-      });
+      const token = getToken(); // Retrieve token
+      const response = await axiosInstance.post(
+        `add-comment/${listingId}/`,
+        { comment: commentText },
+        {
+          headers: {
+            Authorization: `Token ${token}`, // Send token in headers
+            Accept: "application/json",
+          },
+        }
+      );
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Error adding comment");
+      console.error(
+        "Add Comment Error:",
+        error.response?.data || error.message
+      );
+      return rejectWithValue(
+        error.response?.data || { detail: "Error adding comment" }
+      );
     }
   }
 );
