@@ -11,7 +11,7 @@ An eBay-like e-commerce auction site built with Django/PostgreSQL backend and Re
 
 ## Screenshots
 
-![Screenshot](frontend/client/public/images/dashboard.png)
+![Screenshot](frontend/client/public/dashboard.png)
 
 ## About the Project
 
