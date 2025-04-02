@@ -50,7 +50,7 @@ export default function Watchlists() {
                 {item.name_of_item}
               </h3>
               <span className="text-xs text-gray-600">
-                Listed by: {item.owner.username || "Unknown"}
+                Listed by: {item.owner?.username || "Unknown"}
               </span>
               <p>{item.description}</p>
               <p className="font-semibold">
