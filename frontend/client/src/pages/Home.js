@@ -24,7 +24,7 @@ export default function Home() {
                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <span className="mx-2">Clean and Simple Layout</span>
+                <span className="mx-2">Honest, efficient, and reliable</span>
               </p>
               <p className="flex items-center -mx-2 text-gray-200">
                 <svg
@@ -41,7 +41,7 @@ export default function Home() {
                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <span className="mx-2">Just Copy Paste Codeing</span>
+                <span className="mx-2">Bid with ease</span>
               </p>
               <p className="flex items-center -mx-2 text-gray-200">
                 <svg

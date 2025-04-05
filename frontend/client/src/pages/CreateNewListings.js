@@ -65,7 +65,101 @@ export default function CreateListing() {
 
   return (
     <section className="p-6 text-gray-800">
-      <form
+      <div className="grid max-w-screen-xl grid-cols-1 gap-8 px-8 py-16 mx-auto rounded-lg md:grid-cols-2 md:px-12 lg:px-16 xl:px-32 dark:bg-gray-100 dark:text-gray-800">
+        <div className="flex flex-col justify-between">
+          <div className="space-y-2">
+            <h2 className="text-4xl font-bold leading-tight lg:text-5xl">
+              Create New Listing!
+            </h2>
+            <div className="dark:text-gray-600">
+              Fill out the form below to create a new listing.
+            </div>
+          </div>
+          <img src="doodle.svg" alt="" className="p-3 h-52 md:h-64" />
+        </div>
+        <form onSubmit={handleSubmit} noValidate="" className="space-y-6">
+          <div>
+            <label htmlFor="name_of_item" className="text-sm">
+              Name of Item
+            </label>
+            <input
+              id="name_of_item"
+              type="text"
+              name="name_of_item"
+              placeholder="Name of item"
+              value={name_of_item}
+              onChange={handleInputChange}
+              className="w-full p-3 rounded bg-gray-100"
+            />
+          </div>
+          <div>
+            <label htmlFor="category" className="text-sm">
+              Category
+            </label>
+            <input
+              id="category"
+              type="text"
+              name="category"
+              placeholder="Category"
+              value={category}
+              onChange={handleInputChange}
+              className="w-full p-3 rounded bg-gray-100"
+            />
+          </div>
+          <div>
+            <label htmlFor="bid" className="text-sm">
+              Bid Amount
+            </label>
+            <input
+              id="bid"
+              type="number"
+              name="bid"
+              placeholder="Bid amount"
+              value={bid}
+              onChange={handleInputChange}
+              required=""
+              className="w-full p-3 rounded bg-gray-100"
+            />
+          </div>
+          <div>
+            <label htmlFor="image_url" className="text-sm">
+              Image URL
+            </label>
+            <input
+              id="image_url"
+              type="url"
+              name="image_url"
+              placeholder="Image URL"
+              value={image_url}
+              onChange={handleInputChange}
+              required=""
+              className="w-full p-3 rounded bg-gray-100"
+            />
+          </div>
+          <div>
+            <label htmlFor="description" className="block mb-1 ml-1">
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              placeholder="Description..."
+              rows="3"
+              value={description}
+              onChange={handleInputChange}
+              required=""
+              className="w-full p-3 rounded bg-gray-100"
+            ></textarea>
+          </div>
+          <button
+            type="submit"
+            className="w-full p-3 text-sm font-bold tracking-wide uppercase rounded bg-violet-600 text-gray-50"
+          >
+            {isLoading ? "Creating..." : "Create Listing"}
+          </button>
+        </form>
+      </div>
+      {/* <form
         onSubmit={handleSubmit}
         noValidate=""
         className="container w-full max-w-xl p-8 mx-auto space-y-6 rounded-md shadow bg-gray-50"
@@ -155,7 +249,7 @@ export default function CreateListing() {
             {isLoading ? "Creating..." : "Create Listing"}
           </button>
         </div>
-      </form>
+      </form> */}
     </section>
   );
 }
